@@ -1,0 +1,29 @@
+{
+  "name": "dragon-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "start": "docker-compose up --build -d && npm run initialize-database && npm run start-backend",
+    "initialize-database": "docker-compose exec backend npx prisma migrate dev --name init",
+    "start-backend": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@prisma/client": "^6.4.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "express-session": "^1.18.1",
+    "passport": "^0.7.0",
+    "passport-github2": "^0.1.12",
+    "passport-google-oauth20": "^2.0.0"
+  },
+  "devDependencies": {
+    "prisma": "^6.4.1"
+  }
+}
