@@ -14,6 +14,7 @@ export const initializeAuthService = (app) => {
     callbackURL: "http://localhost:5000/auth/google/callback"  //todo:don't hardcode this
   },
     async (accessToken, refreshToken, profile, done) => {
+    
       const user = await prisma.user.upsert({
         where: { email: profile.emails[0].value },
         update: { name: profile.displayName },
