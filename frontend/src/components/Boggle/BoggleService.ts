@@ -25,6 +25,8 @@ export const generateBoard = (): string[][] => {
     return die[Math.floor(Math.random() * die.length)];
   });
 
+  console.log(shuffledDice);
+
   //math.random returns a number between 0 and 1
   //if we subtract 0.5, we get a number between -0.5 and 0.5
   //this will give us a 50% chance of returning a positive or negative number
@@ -36,7 +38,7 @@ export const generateBoard = (): string[][] => {
       if (!board[row]) {
         board[row] = [];
       }
-      board[row][col] = shuffledBoard[row + col];
+      board[row][col] = shuffledBoard[(row * 4)  + col];
     }
   }
   return board;
