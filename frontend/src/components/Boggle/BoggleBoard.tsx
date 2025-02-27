@@ -9,10 +9,10 @@ export const BoggleBoard: React.FC<BoggleBoardProps> = ({board}) => {
     <div className="boggle-board">
       <table>
         <tbody>
-          {board.map((row, i) => (
-            <tr key={i} className="boggle-row">
-              {row.map((letter, j) => (
-                <td key={j} className="boggle-cell">
+          {board.map((row, rowIndex) => (
+            <tr key={rowIndex} className="boggle-row">
+              {row.map((letter, columnIndex) => (
+                <td key={columnIndex} className="boggle-cell">
                   {letter}
                 </td>
               ))}

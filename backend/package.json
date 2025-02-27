@@ -4,9 +4,10 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "start": "docker-compose up --build -d && npm run initialize-database && npm run start-backend",
-    "initialize-database": "docker-compose exec backend npx prisma migrate dev --name init",
-    "start-backend": "node server.js",
+    "start": "npm run initialize-database && npm run start-backend",
+    "build": "tsc -b && mv dist/server.js dist/server.cjs",
+    "initialize-database": "npx prisma generate",
+    "start-backend": "node dist/server.cjs",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -24,6 +25,14 @@
     "passport-google-oauth20": "^2.0.0"
   },
   "devDependencies": {
-    "prisma": "^6.4.1"
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.0",
+    "@types/express-session": "^1.18.1",
+    "@types/node": "^22.13.5",
+    "@types/passport": "^1.0.17",
+    "@types/passport-github2": "^1.2.9",
+    "@types/passport-google-oauth20": "^2.0.16",
+    "prisma": "^6.4.1",
+    "typescript": "~5.7.2"
   }
 }

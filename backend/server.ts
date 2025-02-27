@@ -1,9 +1,10 @@
-const express = require('express');
-const cors = require('cors');
-const dotenv = require('dotenv');
-const session = require('express-session');
-const { PrismaClient } = require('@prisma/client');
-const { initializeAuthService } = require('./src/services/AuthService');
+import express from 'express';
+import cors from 'cors';
+import dotenv from 'dotenv';
+import session from 'express-session';
+import { PrismaClient } from '@prisma/client';
+import { initializeAuthService } from './src/services/AuthService';
+import AuthRouter from './src/routes/AuthRoutes';
 
 dotenv.config();
 
@@ -22,7 +23,7 @@ app.use(session({ secret: 'secret', resave: false, saveUninitialized: true }));
 
 initializeAuthService(app);
 
-app.use('/auth', require('./src/routes/auth'));
+app.use('/auth', AuthRouter);
 
 app.get('/users', async (req, res) => {
   const users = await prisma.user.findMany();

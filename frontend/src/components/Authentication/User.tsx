@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { BaseUserType } from '../../../../shared/types/UserType';
+import { BaseUserType } from '../../../shared/types/UserType';
 import Login from "./Login";
 
 const [user, setUser] = useState<BaseUserType | null>(null);

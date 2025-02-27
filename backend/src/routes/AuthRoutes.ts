@@ -1,25 +1,26 @@
-const express = require('express')
-const passport = require('passport')
+import express from 'express';
+import passport from 'passport';
 
-const router = express.Router()
+
+const AuthRouter = express.Router()
 
 // base url /auth
-router.get('/google',
+AuthRouter.get('/google',
   passport.authenticate('google', { scope: ['profile', 'email'] }));
 
-router.get('/google/callback',
+  AuthRouter.get('/google/callback',
   passport.authenticate('google', { failureRedirect: '/' }),
-  (req, res) => {
+  (_req: express.Request, res: express.Response) => {
     res.redirect('http://localhost:3000');
   });
 
-router.get('/github',
+  AuthRouter.get('/github',
   passport.authenticate('github', { scope: ['user:email'] }));
 
-router.get('/github/callback',
+  AuthRouter.get('/github/callback',
   passport.authenticate('github', { failureRedirect: '/' }),
-  (req, res) => {
+  (_req: express.Request, res: express.Response) => {
     res.redirect('http://localhost:3000');
   });
 
-export default router;
+export default AuthRouter;
