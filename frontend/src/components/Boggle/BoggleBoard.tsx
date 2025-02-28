@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import styles from './BoggleBoard.module.css';
-import { debounce } from 'lodash';
+import { BoggleCurrentWord } from './BoggleCurrentWord';
 
 interface BoggleBoardProps {
   board: string[][];
+  onWordSubmit: (word: string) => void;
+  onWordTooShort: () => void;
 }
 
-export const BoggleBoard: React.FC<BoggleBoardProps> = ({ board }) => {
+export const BoggleBoard: React.FC<BoggleBoardProps> = ({ board, onWordSubmit, onWordTooShort }) => {
   const [isSelecting, setIsSelecting] = useState(false);
   const [selectedLetters, setSelectedLetters] = useState<{ row: number, col: number }[]>([]);
 
@@ -21,17 +23,13 @@ export const BoggleBoard: React.FC<BoggleBoardProps> = ({ board }) => {
   useEffect(() => {
     const handleMouseUpOutside = () => {
       if (isSelecting) {
-        setIsSelecting(false);
-        console.log('Selected letters:', selectedLetters);
-        setSelectedLetters([]);
+        handleMouseUp();
       }
     };
 
     const handleTouchEndOutside = () => {
       if (isSelecting) {
-        setIsSelecting(false);
-        console.log('Selected letters:', selectedLetters);
-        setSelectedLetters([]);
+        handleMouseUp();
       }
     };
 
@@ -65,14 +63,14 @@ export const BoggleBoard: React.FC<BoggleBoardProps> = ({ board }) => {
     document.addEventListener('touchend', handleTouchEndOutside);
 
     document.addEventListener('touchmove', handleTouchMoveOutside, { passive: false });
-    document.addEventListener('touchend', handleTouchEnd, { passive: false });
+    document.addEventListener('touchend', handleMouseUp, { passive: false });
 
     return () => {
       document.removeEventListener('mouseup', handleMouseUpOutside);
       document.removeEventListener('touchend', handleTouchEndOutside);
 
       document.removeEventListener('touchmove', handleTouchMoveOutside);
-      document.removeEventListener('touchend', handleTouchEnd);
+      document.removeEventListener('touchend', handleMouseUp);
     };
 
   }, [isSelecting, selectedLetters]);
@@ -84,9 +82,16 @@ export const BoggleBoard: React.FC<BoggleBoardProps> = ({ board }) => {
   };
 
   const handleMouseUp = () => {
+    prevTouchTarget = null;
     setIsSelecting(false);
     // Handle the selected letters (e.g., check if they form a valid word)
-    console.log('Selected letters:', selectedLetters);
+
+    let word = "";
+    for (const { row, col } of selectedLetters) {
+      word += board[row][col];
+    }
+
+    onWordSubmit(word);
     setSelectedLetters([]);
   };
 
@@ -104,14 +109,11 @@ export const BoggleBoard: React.FC<BoggleBoardProps> = ({ board }) => {
     }
 
     const isAlreadySelected = selectedLetters.some(sel => sel.row === row && sel.col === col);
-
     if (isSelecting) {
-
       if (isAlreadySelected && selectedLetters.length > 1) {
         setSelectedLetters(prev => prev.slice(0, -1));
         return;
       }
-
       setSelectedLetters(prev => [...prev, { row, col }]);
     }
   };
@@ -126,12 +128,9 @@ export const BoggleBoard: React.FC<BoggleBoardProps> = ({ board }) => {
   };
 
 
-  const handleTouchEnd = () => {
-    handleMouseUp();
-  };
-
   return (
     <div className={styles.boggleBoard}>
+      <BoggleCurrentWord selectedLetters={selectedLetters} board={board} />
       <table>
         <tbody>
           {board.map((row, rowIndex) => (
@@ -142,14 +141,13 @@ export const BoggleBoard: React.FC<BoggleBoardProps> = ({ board }) => {
                     <td
                       id={`cell-${rowIndex}-${columnIndex}`}
                       key={columnIndex}
-                      className={`${styles.boggleCell} ${selectedLetters.some(sel => sel.row === rowIndex && sel.col === columnIndex) ? styles.selected : ''}`}
+                      className={`${styles.boggleCell} ${selectedLetters.some(sel => sel.row === rowIndex && sel.col === columnIndex) ? styles.selected : ''} ${selectedLetters[selectedLetters.length - 1]?.row === rowIndex && selectedLetters[selectedLetters.length - 1]?.col === columnIndex ? styles.lastSelected : ''}`}
                       data-row={rowIndex}
                       data-col={columnIndex}
                       onMouseDown={(evt) => handleMouseDown(rowIndex, columnIndex, evt)}
                       onMouseUp={handleMouseUp}
                       onMouseEnter={() => handleMouseEnter(rowIndex, columnIndex)}
                       onTouchStart={(evt) => handleTouchStart(rowIndex, columnIndex, evt)}
-                      onTouchEnd={handleTouchEnd}
                     >
                       {letter}
                     </td>

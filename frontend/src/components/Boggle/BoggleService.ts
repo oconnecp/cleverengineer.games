@@ -1,4 +1,4 @@
-import { trie } from './Trie';
+import { trieDictionary } from './TrieDictionary';
 
 const dice: string[][] = [
   ["R", "I", "F", "O", "B", "X"],
@@ -46,12 +46,5 @@ export const generateBoard = (): string[][] => {
 
 // Example function to check if a word is valid
 export const isValidWord = (word: string): boolean => {
-  let node = trie.root;
-  for (const char of word) {
-    if (!node.children[char]) {
-      return false;
-    }
-    node = node.children[char];
-  }
-  return node.isEndOfWord;
+  return trieDictionary.search(word);
 };
