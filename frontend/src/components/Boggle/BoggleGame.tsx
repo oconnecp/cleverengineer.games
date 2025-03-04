@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BoggleBoard } from './BoggleBoard';
 import { generateBoard, isValidWord } from './BoggleService';
 import { set } from 'lodash';
@@ -6,7 +6,12 @@ import { set } from 'lodash';
 export default function BoggleGame() {
 
   const [words, setWords] = React.useState<string[]>([]);
-  const [board, setBoard] = React.useState<string[][]>(generateBoard());
+  const [board, setBoard] = React.useState<string[][]>([]);
+
+  useEffect(() => {
+    setBoard(generateBoard());
+  }
+  , []);
 
   const handleWordSubmit = (word: string) => {
     if(word.length < 3) {
@@ -39,7 +44,6 @@ export default function BoggleGame() {
       <BoggleBoard
         board={board} 
         onWordSubmit={(word) => handleWordSubmit(word)}
-        onWordTooShort={() => handleOnWordTooShort()}
       />
       {words.length > 0 && (
         <div>

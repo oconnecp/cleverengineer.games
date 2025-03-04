@@ -5,10 +5,9 @@ import { BoggleCurrentWord } from './BoggleCurrentWord';
 interface BoggleBoardProps {
   board: string[][];
   onWordSubmit: (word: string) => void;
-  onWordTooShort: () => void;
 }
 
-export const BoggleBoard: React.FC<BoggleBoardProps> = ({ board, onWordSubmit, onWordTooShort }) => {
+export const BoggleBoard: React.FC<BoggleBoardProps> = ({ board, onWordSubmit }) => {
   const [isSelecting, setIsSelecting] = useState(false);
   const [selectedLetters, setSelectedLetters] = useState<{ row: number, col: number }[]>([]);
 
