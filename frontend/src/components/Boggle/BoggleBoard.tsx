@@ -153,7 +153,7 @@ export const BoggleBoard: React.FC<BoggleBoardProps> = ({ board, onWordSubmit })
                   </React.Fragment>
                 ))}
               </tr> 
-              <tr  key={`row-${rowIndex}-spacer`} className={styles.spacerRow} />
+              <tr className={styles.spacerRow} />
             </React.Fragment>
           ))}
         </tbody>

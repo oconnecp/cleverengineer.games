@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { BoggleBoard } from './BoggleBoard';
 import { generateBoard, isValidWord, findAllWords } from './BoggleService';
 import { set } from 'lodash';
+import { BoggleScore } from './BoggleScore';
 
 export default function BoggleGame() {
 
@@ -49,7 +50,10 @@ export default function BoggleGame() {
     <div className="boggle-game">
       <h1>Boggle</h1>
       <button onClick={handleNewGame}>New Game</button>
-      <button onClick={logAllWords}>Log All Words</button>
+      <BoggleScore
+        board={board}
+        words={words}
+      />
       <BoggleBoard
         board={board} 
         onWordSubmit={(word) => handleWordSubmit(word)}
@@ -58,8 +62,8 @@ export default function BoggleGame() {
         <div>
           <h2>Words Found</h2>
           <ul>
-            {words.map(word => (
-              <li>{word}</li>
+            {words.map((word, wordIndex) => (
+              <li key={wordIndex}>{word}</li>
             ))}
           </ul>
         </div>

@@ -77,6 +77,7 @@ export const calculateTotalScore = (words: string[]): number => {
 }
 
 export const findAllWords = (board: string[][]): string[] => {
+  console.log('Finding all words');
   const words: string[] = [];
   const visited: boolean[][] = [];
   for (let row = 0; row < 4; row++) {

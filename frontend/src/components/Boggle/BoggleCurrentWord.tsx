@@ -7,7 +7,9 @@ interface BoggleCurrentWordProps {
 export const BoggleCurrentWord: React.FC<BoggleCurrentWordProps> = ({selectedLetters, board}) => {
   let word = "";
   for (const {row, col} of selectedLetters) {
-    word += board[row][col];
+    //concatenate the letters of the selected letters
+    //use toUpperCase to fix Qu bug
+    word += board[row][col].toUpperCase();
   }
   
   return (
