@@ -133,13 +133,12 @@ export const BoggleBoard: React.FC<BoggleBoardProps> = ({ board, onWordSubmit })
       <table>
         <tbody>
           {board.map((row, rowIndex) => (
-            <>
-              <tr key={rowIndex} className={styles.boggleRow}>
+            <React.Fragment key={`row-${rowIndex}`} >
+              <tr className={styles.boggleRow}>
                 {row.map((letter, columnIndex) => (
-                  <>
+                  <React.Fragment key={`cell-${columnIndex}-${rowIndex}`} >
                     <td
                       id={`cell-${rowIndex}-${columnIndex}`}
-                      key={columnIndex}
                       className={`${styles.boggleCell} ${selectedLetters.some(sel => sel.row === rowIndex && sel.col === columnIndex) ? styles.selected : ''} ${selectedLetters[selectedLetters.length - 1]?.row === rowIndex && selectedLetters[selectedLetters.length - 1]?.col === columnIndex ? styles.lastSelected : ''}`}
                       data-row={rowIndex}
                       data-col={columnIndex}
@@ -150,12 +149,12 @@ export const BoggleBoard: React.FC<BoggleBoardProps> = ({ board, onWordSubmit })
                     >
                       {letter}
                     </td>
-                    {columnIndex !== row.length - 1 && <td className={styles.spacerCell} />}
-                  </>
+                    {columnIndex !== row.length - 1 && <td key={`cell-${columnIndex}-${rowIndex}-spacer`} className={styles.spacerCell} />}
+                  </React.Fragment>
                 ))}
-              </tr>
-              <tr className={styles.spacerRow} />
-            </>
+              </tr> 
+              <tr  key={`row-${rowIndex}-spacer`} className={styles.spacerRow} />
+            </React.Fragment>
           ))}
         </tbody>
       </table>

@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { BoggleBoard } from './BoggleBoard';
-import { generateBoard, isValidWord } from './BoggleService';
+import { generateBoard, isValidWord, findAllWords } from './BoggleService';
 import { set } from 'lodash';
 
 export default function BoggleGame() {
@@ -34,13 +34,22 @@ export default function BoggleGame() {
     }
   }
 
-  const handleOnWordTooShort = () => {
-    console.log('Selected word is too short');
+  const handleNewGame = () => {
+    // later we can do this on the backend
+    setBoard(generateBoard());
+    setWords([]);
   }
+
+  const logAllWords = ()=>{
+    console.log(findAllWords(board));
+  }
+
 
   return (
     <div className="boggle-game">
       <h1>Boggle</h1>
+      <button onClick={handleNewGame}>New Game</button>
+      <button onClick={logAllWords}>Log All Words</button>
       <BoggleBoard
         board={board} 
         onWordSubmit={(word) => handleWordSubmit(word)}

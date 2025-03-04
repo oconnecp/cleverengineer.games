@@ -16,8 +16,9 @@ export class Trie {
   }
 
   insert(word: string): void {
+    const lowercaseWord = word.toLowerCase();
     let node = this.root;
-    for (const char of word) {
+    for (const char of lowercaseWord) {
       if (!node.children[char]) {
         node.children[char] = new TrieNode();
       }
@@ -26,7 +27,6 @@ export class Trie {
     node.isEndOfWord = true;
   }
 
-  // Additional methods like search can be added here
   search(word: string): boolean {
     const lowercaseWord = word.toLowerCase();
     let node = this.root;
@@ -37,5 +37,17 @@ export class Trie {
       node = node.children[char];
     }
     return node.isEndOfWord;
+  }
+
+  startsWith(prefix: string): boolean {
+    const lowercasePrefix = prefix.toLowerCase();
+    let node = this.root;
+    for (let char of lowercasePrefix) {
+      if (!node.children[char]) {
+        return false;
+      }
+      node = node.children[char];
+    }
+    return true;
   }
 }
