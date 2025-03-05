@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import styles from './BoggleBoard.module.css';
+import styles from './BoggleBoard.module.scss';
 import { BoggleCurrentWord } from './BoggleCurrentWord';
 
 interface BoggleBoardProps {
@@ -149,7 +149,7 @@ export const BoggleBoard: React.FC<BoggleBoardProps> = ({ board, onWordSubmit })
                     >
                       {letter}
                     </td>
-                    {columnIndex !== row.length - 1 && <td key={`cell-${columnIndex}-${rowIndex}-spacer`} className={styles.spacerCell} />}
+                    {columnIndex !== row.length - 1 && <td className={styles.spacerCell} />}
                   </React.Fragment>
                 ))}
               </tr> 

@@ -1,3 +1,5 @@
+import styles from './BoggleBoard.module.scss';
+
 interface BoggleCurrentWordProps {
   selectedLetters: { row: number, col: number }[];
   board: string[][];
@@ -13,7 +15,7 @@ export const BoggleCurrentWord: React.FC<BoggleCurrentWordProps> = ({selectedLet
   }
   
   return (
-    <div style={{height: '40px'}}>
+    <div className={styles.currentWord}>
       <h2>{word}</h2>
     </div>
   );

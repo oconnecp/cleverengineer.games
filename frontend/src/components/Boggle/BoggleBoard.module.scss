@@ -1,0 +1,44 @@
+$cellSize: 50px;
+$spacerSize: 40px;
+
+.boggleBoard {
+  .currentWord {
+    height: $spacerSize;
+    padding-bottom: $spacerSize;
+  }
+
+  .boggleRow {
+    display: table-row;
+
+    .boggleCell {
+      width: $cellSize;
+      height: $cellSize;
+      text-align: center;
+      vertical-align: middle;
+      border: 3px solid #ccc;
+      cursor: pointer;
+      border-radius: 14px;
+
+      &.selected {
+        background-color: #d3d3d3;
+        color: black;
+      }
+
+      &.lastSelected {
+        border-color: darkgreen;
+      }
+    }
+
+    .spacerCell {
+      width: $spacerSize;
+    }
+  }
+
+  .spacerRow {
+    height: $spacerSize;
+  }
+}
+
+.boggleWordList {
+  margin-top: 20px;
+}
