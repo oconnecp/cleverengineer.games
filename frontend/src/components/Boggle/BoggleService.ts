@@ -1,4 +1,4 @@
-import { trieDictionary } from './TrieDictionary';
+import { trieAllWordDictionary, triePopularWordDictionary } from '../Trie/TrieDictionary';
 
 
 // Pulled from the game rules this is the definition of the dice
@@ -22,12 +22,12 @@ const dice: string[][] = [
 ];
 
 export const generateBoard = (): string[][] => {
+  console.log('Generating random popular word');
+  console.log(triePopularWordDictionary.getRandomWord());
   //return an array of random letters from each die
   const shuffledDice = dice.map(die => {
     return die[Math.floor(Math.random() * die.length)];
   });
-
-  console.log(shuffledDice);
 
   //math.random returns a number between 0 and 1
   //if we subtract 0.5, we get a number between -0.5 and 0.5
@@ -47,7 +47,7 @@ export const generateBoard = (): string[][] => {
 };
 
 export const isValidWord = (word: string): boolean => {
-  return trieDictionary.search(word);
+  return trieAllWordDictionary.search(word);
 };
 
 export const calculateWordScore = (word: string): number => {
@@ -87,7 +87,6 @@ export const findAllWords = (board: string[][]): string[] => {
     }
   }
 
-
   for (let row = 0; row < 4; row++) {
     for (let col = 0; col < 4; col++) {
       dfs(row, col, "", board, visited).forEach(word => {
@@ -102,10 +101,8 @@ export const findAllWords = (board: string[][]): string[] => {
   return words;
 }
 
-
 const dfs = (row: number, col: number, prefix: string, board: string[][], visited: boolean[][]): string[] => {
   const words: string[] = [];
-
   //Check if row and col are within bounds
   if (row < 0 || row >= 4 || col < 0 || col >= 4) {
     return [];
@@ -122,12 +119,12 @@ const dfs = (row: number, col: number, prefix: string, board: string[][], visite
 
   const word = prefix + board[row][col];
   //if the word doesn't start with any of the prefixes in the trie, return
-  if (!trieDictionary.startsWith(word)) {
+  if (!trieAllWordDictionary.startsWith(word)) {
     return [];
   } 
    
   //if this is a word in the trie, add it to the list of words
-  if (word.length >= 3 && trieDictionary.search(word)) {
+  if (word.length >= 3 && trieAllWordDictionary.search(word)) {
     words.push(word);
   }
 
