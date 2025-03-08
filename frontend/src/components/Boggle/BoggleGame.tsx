@@ -3,6 +3,7 @@ import { BoggleBoard } from './BoggleBoard';
 import { generateBoard, isValidWord, findAllWords } from './BoggleService';
 import { BoggleScore } from './BoggleScore';
 import { BoggleWordList } from './BoggleWordList';
+import { ToastTypeEnum, triggerToast } from '../Toast/ToastService';
 
 export default function BoggleGame() {
 
@@ -11,28 +12,40 @@ export default function BoggleGame() {
 
   useEffect(() => {
     setBoard(generateBoard());
-  }
-    , []);
+  }, []);
 
   const handleWordSubmit = (word: string) => {
-    if (word.length < 3) {
-      console.log('Word is too short');
+    const prettyWord = `${word.charAt(0).toUpperCase()}${word.slice(1).toLowerCase()}`;
+
+    if (prettyWord.length < 3) {
+      triggerToast({
+        message: `${prettyWord} is too short`,
+        type: ToastTypeEnum.OVERWRITE,
+        duration: 2000
+      })
       return;
     }
-    console.log('word is long enough')
 
-    if (!isValidWord(word)) {
-      console.log(`Invalid word: ${word}`);
+    if (!isValidWord(prettyWord)) {
+      triggerToast({
+        message: `${prettyWord} not found in dictionary`,
+        type: ToastTypeEnum.OVERWRITE,
+        duration: 2000
+      })
       return;
     }
-    console.log('Valid word found')
 
-    if (words.indexOf(word) > -1) {
-      console.log(`Word already found: ${word}`);
-    } else {
-      //let's make the words look pretty once they are in the list
-      setWords([...words, `${word.charAt(0).toUpperCase()}${word.slice(1).toLowerCase()}`]);
+    if (words.indexOf(prettyWord) > -1) {
+      triggerToast({
+        message: `${prettyWord} already found`,
+        type: ToastTypeEnum.OVERWRITE,
+        duration: 2000
+      })
+      return;
     }
+
+    setWords([...words, prettyWord]);
+
   }
 
   const handleNewGame = () => {

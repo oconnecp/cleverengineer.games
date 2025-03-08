@@ -113,7 +113,9 @@ export const BoggleBoard: React.FC<BoggleBoardProps> = ({ board, onWordSubmit })
         setSelectedLetters(prev => prev.slice(0, -1));
         return;
       }
-      setSelectedLetters(prev => [...prev, { row, col }]);
+      if (!isAlreadySelected) {
+        setSelectedLetters(prev => [...prev, { row, col }]);
+      }
     }
   };
 
@@ -152,7 +154,7 @@ export const BoggleBoard: React.FC<BoggleBoardProps> = ({ board, onWordSubmit })
                     {columnIndex !== row.length - 1 && <td className={styles.spacerCell} />}
                   </React.Fragment>
                 ))}
-              </tr> 
+              </tr>
               <tr className={styles.spacerRow} />
             </React.Fragment>
           ))}

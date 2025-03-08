@@ -23,7 +23,7 @@ export const BoggleScore: React.FC<BoggleScoreProps> = ({ board, words }) => {
   return (
     <div >
       <h2>Score: {score}</h2>
-      <h2>Total Remaining Score: {totalPossibleScore - score}</h2>
+      <h2>Maximum Remaining Score: {totalPossibleScore - score}</h2>
     </div>
   );
 };

@@ -4,7 +4,8 @@ $spacerSize: 40px;
 .boggleBoard {
   .currentWord {
     height: $spacerSize;
-    padding-bottom: $spacerSize;
+    padding-bottom: $spacerSize / 3;
+    text-align: center;
   }
 
   .boggleRow {
@@ -40,5 +41,5 @@ $spacerSize: 40px;
 }
 
 .boggleWordList {
-  margin-top: 20px;
+  // margin-top: 20px;
 }

@@ -5,6 +5,7 @@ import './App.css'
 import HelloWorld from './components/HelloWorld/HelloWorld'
 import Login from './components/Authentication/Login'
 import BoggleGame from './components/Boggle/BoggleGame'
+import { ToastHandler } from './components/Toast/ToastHandler'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -35,6 +36,7 @@ function App() {
       {/* <Login /> */}
       {/* <HelloWorld /> */}
       <BoggleGame />
+      <ToastHandler />
     </>
   )
 }
