@@ -1,20 +1,38 @@
 import React from 'react';
-import styles from './BoggleBoard.module.scss';
 
-
-interface BoggleWordsProps {
+interface BoggleWordListProps {
   words: string[]
 }
 
-export const BoggleWordList:React.FC<BoggleWordsProps> = ({words}) => {
+const boggleWordListStyle : React.CSSProperties = {
+  height: "100%",
+  display: "flex",
+  flexDirection: "column",
+  overflow: "hidden",
+  margin: "0 0 5px 0",
+}
+
+const h2Style : React.CSSProperties = {
+  textAlign: "center"
+}
+
+const scrollingStyle : React.CSSProperties = {
+  display: "flex",
+  height: "100%",
+  overflow: "auto"
+}
+
+export const BoggleWordList: React.FC<BoggleWordListProps> = ({ words }) => {
   return (
-    <div className={styles.boggleWordList}>
-      <h2>{words.length > 0 ? 'Words Found:' : 'Find Words by swiping'}</h2>
-      <ul>
-        {words.map((word, index) => (
-          <li key={index}>{word}</li>
-        ))}
-      </ul>
+    <div style={boggleWordListStyle}>
+      <h2 style={h2Style}>{words.length > 0 ? 'Words Found:' : 'Find Words by swiping'}</h2>
+      <div style={scrollingStyle}>
+        <ul>
+          {words.map((word, index) => (
+            <li key={index}>{word}</li>
+          ))}
+        </ul>
+      </div>
     </div>
   )
 };

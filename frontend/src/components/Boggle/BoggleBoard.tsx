@@ -81,6 +81,10 @@ export const BoggleBoard: React.FC<BoggleBoardProps> = ({ board, onWordSubmit })
   };
 
   const handleMouseUp = () => {
+    if (!isSelecting) {
+      return;
+    }
+    
     prevTouchTarget = null;
     setIsSelecting(false);
     // Handle the selected letters (e.g., check if they form a valid word)

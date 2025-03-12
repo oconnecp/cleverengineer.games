@@ -3,10 +3,11 @@ import { calculateTotalScore, findAllWords } from "./BoggleService";
 
 interface BoggleScoreProps {
   board: string[][];
-  words: string[]
+  words: string[];
+  style? : React.CSSProperties;
 }
 
-export const BoggleScore: React.FC<BoggleScoreProps> = ({ board, words }) => {
+export const BoggleScore: React.FC<BoggleScoreProps> = ({ board, words, style }) => {
 
   const [score, setScore] = React.useState(0);
   const [totalPossibleScore, setTotalPossibleScore] = React.useState(0);
@@ -21,9 +22,11 @@ export const BoggleScore: React.FC<BoggleScoreProps> = ({ board, words }) => {
   }, [board]);
 
   return (
-    <div >
-      <h2>Score: {score}</h2>
-      <h2>Maximum Remaining Score: {totalPossibleScore - score}</h2>
-    </div>
+    <h2 style={style}>
+      <span>Score: </span>
+      <span>{score}</span>
+      <span> / </span>
+      <span>{totalPossibleScore}</span>
+    </h2>
   );
 };

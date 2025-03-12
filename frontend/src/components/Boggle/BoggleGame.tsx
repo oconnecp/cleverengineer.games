@@ -4,6 +4,8 @@ import { generateBoard, isValidWord, findAllWords } from './BoggleService';
 import { BoggleScore } from './BoggleScore';
 import { BoggleWordList } from './BoggleWordList';
 import { ToastTypeEnum, triggerToast } from '../Toast/ToastService';
+import AddCircleSVG from '../../assets/AddCircleSVG'
+import { head } from 'lodash';
 
 export default function BoggleGame() {
 
@@ -58,9 +60,10 @@ export default function BoggleGame() {
     console.log(findAllWords(board));
   }
 
-  const boggleGameStyle = {
-    display: "grid",
-    gridTemplateRows: ".5fr 1fr .5fr",
+  const boggleGameStyle: React.CSSProperties = {
+    display: "flex",
+    height: "100vh",
+    flexDirection: "column",
     overflow: "hidden",
   }
 
@@ -71,12 +74,31 @@ export default function BoggleGame() {
     justifyContent: "center"
   }
 
+  const boggleControlsStyle: React.CSSProperties = {
+    display: "flex",
+  }
+
+  const boggleControlChildStyle: React.CSSProperties = {
+    margin: "auto",
+  }
+  const svgButtonStyle : React.CSSProperties = {
+    ...boggleControlChildStyle,
+    textAlign: "center",
+    padding: "4px",
+    display: "flex",
+  }
+
   return (
     <div className="boggle-game" style={boggleGameStyle}>
       <div className='boggle-header' style={boggleHeader}>
         <h1>Boggle</h1>
-        <button onClick={handleNewGame}>New Game</button>
-        <BoggleScore
+        </div>
+      <div style={boggleControlsStyle}>
+        <button style={svgButtonStyle} onClick={handleNewGame}>
+          <AddCircleSVG></AddCircleSVG>
+          <span>New Game</span>
+        </button>
+        <BoggleScore style={boggleControlChildStyle}
           board={board}
           words={words}
         />

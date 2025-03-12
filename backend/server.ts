@@ -1,4 +1,4 @@
-import express from 'express';
+import express, {Request, Response} from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import session from 'express-session';
@@ -25,12 +25,12 @@ initializeAuthService(app);
 
 app.use('/auth', AuthRouter);
 
-app.get('/users', async (req, res) => {
+app.get('/users', async (req: Request, res: Response) => {
   const users = await prisma.user.findMany();
   res.json(users);
 });
 
-app.get('/', async (req, res) => {
+app.get('/', async (req: Request, res: Response) => {
   res.send('Hello World');
 });
 
