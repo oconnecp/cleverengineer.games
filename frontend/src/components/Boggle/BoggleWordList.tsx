@@ -37,7 +37,7 @@ export const BoggleWordList: React.FC<BoggleWordListProps> = ({ words }) => {
       <h2 style={h2Style}>{words.length > 0 ? 'Words Found:' : 'Find Words by swiping'}</h2>
       <div style={scrollingStyle}>
         <div style={spacerStyle}/>
-        // todo: refactor so that we get rid of the ul styling
+        {/* todo: refactor so that we get rid of the ul styling */}
         <ul style={listStyle}>
           {words.map((word, index) => (
             index % 2 === 0 && (<li key={index}>{word}</li>)
