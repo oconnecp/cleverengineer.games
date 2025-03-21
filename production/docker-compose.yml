@@ -7,9 +7,7 @@ services:
     volumes:
       - ./nginx/conf:/etc/nginx/conf.d:ro
       - ./cerbot/www/:/var/www/certbot:ro
-    depends_on:
-      - frontend
-  cerbot:
+  certbot:
     image: certbot/certbot:latest
     volumes:
       - ./certbot/conf:/etc/letsencrypt:/rw
