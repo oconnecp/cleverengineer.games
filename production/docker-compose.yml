@@ -13,7 +13,6 @@ services:
     volumes:
       - ./certbot/conf:/etc/letsencrypt:rw
       - ./certbot/www:/var/www/certbot:rw
-    #entrypoint: "/bin/sh -c"
     entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
   db:
     image: postgres:13
@@ -23,29 +22,29 @@ services:
       POSTGRES_DB: mydb
     volumes:
       - postgres-data:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
+#    ports:
+#      - "5432:5432"
 
   backend:
     build: ../backend
     environment:
       DATABASE_URL: postgresql://user:password@db:5432/mydb
-    ports:
-      - "5000:5000"
+#    ports:
+#      - "5000:5000"
     depends_on:
       - db
 
   frontend:
     build: ../frontend
-    ports:
-      - "3000:3000"
+#    ports:
+#      - "3000:3000"
     depends_on:
       - backend
 
   adminer:
     image: adminer
-    ports:
-      - "8080:8080"
+#    ports:
+#      - "8080:8080"
     depends_on:
       - db
 
