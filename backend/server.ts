@@ -1,25 +1,32 @@
-import express, {Request, Response} from 'express';
+import express, { Request, Response } from 'express';
 import cors from 'cors';
-import dotenv from 'dotenv';
 import session from 'express-session';
 import { PrismaClient } from '@prisma/client';
 import { initializeAuthService } from './src/services/AuthService';
 import AuthRouter from './src/routes/AuthRoutes';
-
-dotenv.config();
+import { ADD_CORS, PORT, FRONTEND_ORIGIN, SESSION_SECRET } from './src/tools/Constants';
 
 const app = express();
 const prisma = new PrismaClient();
-const PORT = process.env.PORT || 5000;
 
 // Configure CORS to allow requests from the frontend
-app.use(cors({
-  origin: 'http://localhost:3000',
-  credentials: true
-}));
+// If we are in production with our current setup, we won't need to use CORS
+// because the frontend and backend will be served from the same domain.
+if (ADD_CORS) {
+  app.use(cors({
+    origin: FRONTEND_ORIGIN,
+    credentials: true
+  }));
+}
+// logger middleware
+app.use((req: Request ,res:Response,next) =>{
+  const time = new Date(Date.now()).toString();
+  console.log(req.method,req.hostname, req.path, time);
+  next();
+});
 
 app.use(express.json());
-app.use(session({ secret: 'secret', resave: false, saveUninitialized: true }));
+app.use(session({ secret: SESSION_SECRET, resave: false, saveUninitialized: true }));
 
 initializeAuthService(app);
 

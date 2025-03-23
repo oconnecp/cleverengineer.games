@@ -1,9 +1,9 @@
 {
   "compilerOptions": {
     "target": "ESNext",
-    "module": "CommonJS",
+    "module": "NodeNext",
     "lib": ["ESNext"],
-    "moduleResolution": "Node",
+    "moduleResolution": "nodenext",
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
@@ -11,5 +11,5 @@
     "forceConsistentCasingInFileNames": true,
     "outDir": "./server-dist"
   },
-  "include": ["server.ts"]
+  "include": ["server.ts", "server-constants.ts"]
 }

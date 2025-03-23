@@ -1,15 +1,30 @@
-import express from 'express';
+import express, {Request, Response} from 'express';
 import path from 'path';
+import { fileURLToPath } from 'url';
 import cors from 'cors';
+import { PORT, BACKEND_ORIGIN, ADD_CORS } from './server-constants.js';
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+
+
+// Define __filename and __dirname for ES modules
+// const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname('./');
 
 // Configure CORS to allow requests from the backend
-app.use(cors({
-  origin: 'http://localhost:5000',
-  credentials: true
-}));
+if (ADD_CORS) {
+  app.use(cors({
+    origin: BACKEND_ORIGIN,
+    credentials: true
+  }));
+}
+
+// logger middleware
+app.use((req: Request ,res:Response,next) =>{
+  const time = new Date(Date.now()).toString();
+  console.log(req.method,req.hostname, req.path, time);
+  next();
+});
 
 // Serve static files from the 'dist' directory
 app.use(express.static(path.join(__dirname, '../dist')));

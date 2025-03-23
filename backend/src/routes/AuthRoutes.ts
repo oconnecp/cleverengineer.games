@@ -1,6 +1,6 @@
 import express from 'express';
 import passport from 'passport';
-
+import {FRONTEND_ORIGIN} from '../tools/Constants';
 
 const AuthRouter = express.Router()
 
@@ -11,7 +11,7 @@ AuthRouter.get('/google',
   AuthRouter.get('/google/callback',
   passport.authenticate('google', { failureRedirect: '/' }),
   (_req: express.Request, res: express.Response) => {
-    res.redirect('http://localhost:3000');
+    res.redirect(FRONTEND_ORIGIN);
   });
 
   AuthRouter.get('/github',
@@ -20,7 +20,7 @@ AuthRouter.get('/google',
   AuthRouter.get('/github/callback',
   passport.authenticate('github', { failureRedirect: '/' }),
   (_req: express.Request, res: express.Response) => {
-    res.redirect('http://localhost:3000');
+    res.redirect(FRONTEND_ORIGIN);
   });
 
 export default AuthRouter;
