@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 dotenv.config();
 
-export const PORT = process.env.PORT || 5000;
+export const PORT = process.env.PORT || 3000;
 export const HOSTNAME = process.env.HOSTNAME || 'localhost';
 
 if(HOSTNAME === 'localhost') {
