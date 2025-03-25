@@ -1,16 +1,17 @@
 // filepath: /c:/Users/oconn/Documents/Workspace/dragon/frontend/src/components/HelloWorld/HelloWorld.tsx
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import { AxiosResponse, AxiosError } from 'axios';
+import { apiGet } from '../../services/ApiClient'
 
 function App() {
   const [message, setMessage] = useState('');
 
   useEffect(() => {
-    axios.get('http://localhost:5000/', { withCredentials: true })
-      .then(response => {
+    apiGet('/')
+      .then((response: AxiosResponse)  => {
         setMessage(response.data);
       })
-      .catch(error => {
+      .catch((error: AxiosError) => {
         console.error('There was an error fetching the data!', error);
       });
   }, []);

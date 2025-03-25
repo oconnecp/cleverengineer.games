@@ -1,10 +1,15 @@
+import {BACKEND_ORIGIN} from "../../tools/Constants";
+
+const googleAuthHref = new URL('/auth/google', BACKEND_ORIGIN).toString();
+const githubAuthHref = new URL('/auth/github', BACKEND_ORIGIN).toString();
+
 const Login = () => {
   const handleGoogleLogin = () => {
-    window.location.href = 'http://localhost:5000/auth/google';
+    window.location.href = googleAuthHref;
   };
 
   const handleGitHubLogin = () => {
-    window.location.href = 'http://localhost:5000/auth/github';
+    window.location.href = githubAuthHref;
   };
 
   return (

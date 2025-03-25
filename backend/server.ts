@@ -8,6 +8,7 @@ import { ADD_CORS, PORT, FRONTEND_ORIGIN, SESSION_SECRET } from './src/tools/Con
 
 const app = express();
 const prisma = new PrismaClient();
+const baseUrl = '/api';
 
 // Configure CORS to allow requests from the frontend
 // If we are in production with our current setup, we won't need to use CORS
@@ -30,14 +31,14 @@ app.use(session({ secret: SESSION_SECRET, resave: false, saveUninitialized: true
 
 initializeAuthService(app);
 
-app.use('/auth', AuthRouter);
+app.use(`${baseUrl}/auth`, AuthRouter);
 
-app.get('/users', async (req: Request, res: Response) => {
+app.get(`${baseUrl}/users`, async (req: Request, res: Response) => {
   const users = await prisma.user.findMany();
   res.json(users);
 });
 
-app.get('/', async (req: Request, res: Response) => {
+app.get(`${baseUrl}`, async (req: Request, res: Response) => {
   res.send('Hello World');
 });
 

@@ -31,6 +31,9 @@ app.use(express.static(path.join(__dirname, '../dist')));
 
 // Handle all other routes by serving the index.html file
 app.get('*', (req, res) => {
+  if(req.path !== '/'){
+    console.log(`Request to ${req.path} is likely a bot trying to check for vulnerabilities`);
+  }
   res.sendFile(path.join(__dirname, '../dist', 'index.html'));
 });
 
