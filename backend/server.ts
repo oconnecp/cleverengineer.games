@@ -38,7 +38,7 @@ app.get(`${baseUrl}/users`, async (req: Request, res: Response) => {
   res.json(users);
 });
 
-app.get(`${baseUrl}`, async (req: Request, res: Response) => {
+app.get(`${baseUrl}/helloworld`, async (req: Request, res: Response) => {
   res.send('Hello World');
 });
 
