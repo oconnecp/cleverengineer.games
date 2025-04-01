@@ -1,9 +1,9 @@
 import axios from "axios";
 import { BACKEND_ORIGIN } from "../tools/Constants";
 
-console.log(BACKEND_ORIGIN);
-
 export const apiGet = (endpoint:string)=>{
+    console.log('Backend Origin:', BACKEND_ORIGIN);
+    console.log('Endpoint:', endpoint);
     const fullUrl = new URL(endpoint, BACKEND_ORIGIN).toString();
     console.log(fullUrl);
     return axios.get(fullUrl, { withCredentials: true })

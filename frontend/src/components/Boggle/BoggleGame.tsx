@@ -56,10 +56,6 @@ export default function BoggleGame() {
     setWords([]);
   }
 
-  const logAllWords = () => {
-    console.log(findAllWords(board));
-  }
-
   const boggleGameStyle: React.CSSProperties = {
     display: "flex",
     height: "100vh",

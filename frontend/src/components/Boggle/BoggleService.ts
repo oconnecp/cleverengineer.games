@@ -22,8 +22,6 @@ const dice: string[][] = [
 ];
 
 export const generateBoard = (): string[][] => {
-  console.log('Generating random popular word');
-  console.log(triePopularWordDictionary.getRandomWord());
   //return an array of random letters from each die
   const shuffledDice = dice.map(die => {
     return die[Math.floor(Math.random() * die.length)];
@@ -77,7 +75,6 @@ export const calculateTotalScore = (words: string[]): number => {
 }
 
 export const findAllWords = (board: string[][]): string[] => {
-  console.log('Finding all words');
   const words: string[] = [];
   const visited: boolean[][] = [];
   for (let row = 0; row < 4; row++) {

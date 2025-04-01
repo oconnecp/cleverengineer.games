@@ -8,13 +8,11 @@ export enum ActionTypeEnum {
 }
 
 export const registerToastHandler = (callback: (actionType:ActionTypeEnum, toast: ToastType) => void) =>{ 
-  console.log('resgistering toast handler');
   handlers.push(callback);
   return callback;
 }
 
 export const unregisterToastHandler = (callback: (actionType:ActionTypeEnum, toast: ToastType) => void) => {
-  console.log('unregistering toast handler');
   const index = handlers.indexOf(callback);
   if (index !== -1) {
     handlers.splice(index, 1);

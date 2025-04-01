@@ -7,7 +7,7 @@ function App() {
   const [message, setMessage] = useState('');
 
   useEffect(() => {
-    apiGet('/helloworld')
+    apiGet('helloworld')
       .then((response: AxiosResponse)  => {
         setMessage(response.data);
       })
