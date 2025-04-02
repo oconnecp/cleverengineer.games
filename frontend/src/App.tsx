@@ -34,7 +34,7 @@ function App() {
       </p> */}
 
       {/* <Login /> */}
-      <HelloWorld />
+      {/* <HelloWorld /> */}
       <BoggleGame />
       <ToastHandler />
     </>
