@@ -15,7 +15,7 @@ services:
     ports:
       - "5000:5000"
     environment:
-      - HOSTNAME=localhost
+      HOSTNAME: localhost
     depends_on:
       - db
 
@@ -24,8 +24,8 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - HOSTNAME=localhost
-      - MODE=development
+      HOSTNAME: localhost
+      MODE: development
 
   adminer:
     image: adminer
