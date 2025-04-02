@@ -1,5 +1,5 @@
 import React, { useState, useLayoutEffect } from 'react';
-import MenuSVG from '../../assets/MenuSVG'
+import { MenuSVG } from '../../assets/MenuSVG'
 
 interface HamburgerProps {
   children?: React.ReactNode;
@@ -21,7 +21,7 @@ export const Hamburger: React.FC<HamburgerProps> = ({ children }) => {
     display: "flex",
     flexDirection: "row",
     justifyContent: "end",
-    backgroundColor: "#f0f0f0",
+    // backgroundColor: "#f0f0f0",
     position: "fixed",
     top: 0,
     left: 0,
@@ -41,6 +41,19 @@ export const Hamburger: React.FC<HamburgerProps> = ({ children }) => {
     position: "fixed",
     top: 0,
     left: 0,
+    width: "24px",
+    height: "24px",
+    padding: "2px",
+  }
+
+  const drawerStyle: React.CSSProperties = {
+    position: "fixed",
+    top: 0,
+    left: "28px",
+    width: "40%",
+    height: "100%",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    zIndex: 50,
   }
 
   return (
@@ -52,7 +65,7 @@ export const Hamburger: React.FC<HamburgerProps> = ({ children }) => {
         <MenuSVG />
       </div>
       {drawerOpen && (
-        <div>
+        <div style={drawerStyle}>
           {children}
         </div>
       )}

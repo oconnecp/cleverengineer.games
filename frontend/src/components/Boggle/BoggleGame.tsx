@@ -4,7 +4,7 @@ import { generateBoard, isValidWord } from './BoggleService';
 import { BoggleScore } from './BoggleScore';
 import { BoggleWordList } from './BoggleWordList';
 import { ToastTypeEnum, triggerToast } from '../Toast/ToastService';
-import AddCircleSVG from '../../assets/AddCircleSVG'
+import { AddCircleSVG } from '../../assets/AddCircleSVG'
 
 export default function BoggleGame() {
 
@@ -77,7 +77,7 @@ export default function BoggleGame() {
   const boggleControlChildStyle: React.CSSProperties = {
     margin: "auto",
   }
-  const svgButtonStyle : React.CSSProperties = {
+  const svgButtonStyle: React.CSSProperties = {
     ...boggleControlChildStyle,
     textAlign: "center",
     padding: "4px",
@@ -92,7 +92,7 @@ export default function BoggleGame() {
     <div className="boggle-game" style={boggleGameStyle}>
       <div className='boggle-header' style={boggleHeader}>
         <h1>Boggle</h1>
-        </div>
+      </div>
       <div style={boggleControlsStyle}>
         <button style={svgButtonStyle} onClick={handleNewGame}>
           <AddCircleSVG style={circleSVGStyle}></AddCircleSVG>
