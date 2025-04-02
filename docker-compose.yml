@@ -14,6 +14,8 @@ services:
     build: ./backend
     ports:
       - "5000:5000"
+    environment:
+      - HOSTNAME=localhost
     depends_on:
       - db
 
@@ -21,6 +23,9 @@ services:
     build: ./frontend
     ports:
       - "3000:3000"
+    environment:
+      - HOSTNAME=localhost
+      - MODE=development
 
   adminer:
     image: adminer

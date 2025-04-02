@@ -1,4 +1,4 @@
-export const PopularDictionary = [
+export const PopularWordDictionary = [
   "a",
   "aa",
   "aaa",

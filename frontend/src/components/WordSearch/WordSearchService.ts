@@ -1,14 +1,15 @@
-import { triePopularWordDictionary } from '../Trie/TrieDictionary';
+import { getPopularWordDictionaryTree } from '../Trie/TrieDictionary';
 
 export const generateBoard = (): string[][] => {
   throw new Error("Not implemented");
 };
 
-const pickRandomWords = (numberOfWords: number): string[] => {
+const pickRandomWords = async (numberOfWords: number): Promise<string[]> => {
   const words: string[] = [];
   for (let i = 0; i < numberOfWords; i++) {
     const randomIndex = Math.floor(Math.random());
-    words.push(triePopularWordDictionary.getRandomWord());
+    const randomWord = await getPopularWordDictionaryTree().then(trie => trie.getRandomWord());
+    words.push(randomWord);
   }
   return words;
 }

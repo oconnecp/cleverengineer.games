@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { BoggleBoard } from './BoggleBoard';
-import { generateBoard, isValidWord, findAllWords } from './BoggleService';
+import { generateBoard, isValidWord } from './BoggleService';
 import { BoggleScore } from './BoggleScore';
 import { BoggleWordList } from './BoggleWordList';
 import { ToastTypeEnum, triggerToast } from '../Toast/ToastService';
@@ -16,7 +16,7 @@ export default function BoggleGame() {
     setBoard(generateBoard());
   }, []);
 
-  const handleWordSubmit = (word: string) => {
+  const handleWordSubmit = async (word: string) => {
     const prettyWord = `${word.charAt(0).toUpperCase()}${word.slice(1).toLowerCase()}`;
 
     if (prettyWord.length < 3) {
@@ -28,7 +28,8 @@ export default function BoggleGame() {
       return;
     }
 
-    if (!isValidWord(prettyWord)) {
+    const thisWordValid = await isValidWord(prettyWord);
+    if (!thisWordValid) {
       triggerToast({
         message: `${prettyWord} not found in dictionary`,
         type: ToastTypeEnum.OVERWRITE,

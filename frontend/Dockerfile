@@ -19,5 +19,9 @@ RUN npm run build
 # Expose the port the app runs on
 EXPOSE 3000
 
-# Start the custom server
-CMD ["npm", "run", "start"]
+# Copy the entrypoint script
+COPY entrypoint.sh /app/entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
+
+# Use the entrypoint script to dynamically decide the command
+ENTRYPOINT ["/app/entrypoint.sh"]

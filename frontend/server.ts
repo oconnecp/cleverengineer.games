@@ -13,6 +13,7 @@ const __dirname = path.dirname(__filename);
 
 // Configure CORS to allow requests from the backend
 if (ADD_CORS) {
+  console.log(`Adding CORS for ${BACKEND_ORIGIN}`);
   app.use(cors({
     origin: BACKEND_ORIGIN,
     credentials: true

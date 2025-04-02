@@ -5,6 +5,7 @@ import { PrismaClient } from '@prisma/client';
 import { initializeAuthService } from './src/services/AuthService';
 import AuthRouter from './src/routes/AuthRoutes';
 import { ADD_CORS, PORT, FRONTEND_ORIGIN, SESSION_SECRET } from './src/tools/Constants';
+import DictionaryRouter from './src/routes/DictionaryRoutes';
 
 const app = express();
 const prisma = new PrismaClient();
@@ -14,6 +15,7 @@ const baseUrl = '/api';
 // If we are in production with our current setup, we won't need to use CORS
 // because the frontend and backend will be served from the same domain.
 if (ADD_CORS) {
+  console.log(`Adding CORS for ${FRONTEND_ORIGIN}`);
   app.use(cors({
     origin: FRONTEND_ORIGIN,
     credentials: true
@@ -37,6 +39,8 @@ app.get(`${baseUrl}/users`, async (req: Request, res: Response) => {
   const users = await prisma.user.findMany();
   res.json(users);
 });
+
+app.use(`${baseUrl}/dictionary`, DictionaryRouter);
 
 app.get(`${baseUrl}/helloworld`, async (req: Request, res: Response) => {
   res.send('Hello World');

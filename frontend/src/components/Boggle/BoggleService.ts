@@ -1,4 +1,5 @@
-import { trieAllWordDictionary, triePopularWordDictionary } from '../Trie/TrieDictionary';
+import { Trie } from '../Trie/Trie';
+import { getAllWordDictionaryTree } from '../Trie/TrieDictionary';
 
 
 // Pulled from the game rules this is the definition of the dice
@@ -44,7 +45,8 @@ export const generateBoard = (): string[][] => {
   return board;
 };
 
-export const isValidWord = (word: string): boolean => {
+export const isValidWord = async (word: string): Promise<boolean> => {
+  const trieAllWordDictionary = await getAllWordDictionaryTree();
   return trieAllWordDictionary.search(word);
 };
 
@@ -74,7 +76,7 @@ export const calculateTotalScore = (words: string[]): number => {
   }, 0);
 }
 
-export const findAllWords = (board: string[][]): string[] => {
+export const findAllWords = async (board: string[][]): Promise<string[]> => {
   const words: string[] = [];
   const visited: boolean[][] = [];
   for (let row = 0; row < 4; row++) {
@@ -86,7 +88,7 @@ export const findAllWords = (board: string[][]): string[] => {
 
   for (let row = 0; row < 4; row++) {
     for (let col = 0; col < 4; col++) {
-      dfs(row, col, "", board, visited).forEach(word => {
+      (await startDFS(row, col, "", board, visited)).forEach(word => {
         //if the word is not already in the list of words, add it
         if (words.indexOf(word) === -1) {
           words.push(word);
@@ -98,7 +100,12 @@ export const findAllWords = (board: string[][]): string[] => {
   return words;
 }
 
-const dfs = (row: number, col: number, prefix: string, board: string[][], visited: boolean[][]): string[] => {
+const startDFS = async (row: number, col: number, prefix: string, board: string[][], visited: boolean[][]): Promise<string[]> => {
+  const trieAllWordDictionary = await getAllWordDictionaryTree();
+  return dfs(row, col, prefix, board, visited, trieAllWordDictionary);
+}
+
+const dfs = (row: number, col: number, prefix: string, board: string[][], visited: boolean[][], trieAllWordDictionary:Trie): string[] => {
   const words: string[] = [];
   //Check if row and col are within bounds
   if (row < 0 || row >= 4 || col < 0 || col >= 4) {
@@ -126,14 +133,14 @@ const dfs = (row: number, col: number, prefix: string, board: string[][], visite
   }
 
   return [
-    dfs(row - 1, col - 1, word, board, copiedVisited),
-    dfs(row - 1, col, word, board, copiedVisited),
-    dfs(row - 1, col + 1, word, board, copiedVisited),
-    dfs(row, col - 1, word, board, copiedVisited),
-    dfs(row, col + 1, word, board, copiedVisited),
-    dfs(row + 1, col - 1, word, board, copiedVisited),
-    dfs(row + 1, col, word, board, copiedVisited),
-    dfs(row + 1, col + 1, word, board, copiedVisited),
+    dfs(row - 1, col - 1, word, board, copiedVisited, trieAllWordDictionary),
+    dfs(row - 1, col, word, board, copiedVisited, trieAllWordDictionary),
+    dfs(row - 1, col + 1, word, board, copiedVisited, trieAllWordDictionary),
+    dfs(row, col - 1, word, board, copiedVisited, trieAllWordDictionary),
+    dfs(row, col + 1, word, board, copiedVisited, trieAllWordDictionary),
+    dfs(row + 1, col - 1, word, board, copiedVisited, trieAllWordDictionary),
+    dfs(row + 1, col, word, board, copiedVisited, trieAllWordDictionary),
+    dfs(row + 1, col + 1, word, board, copiedVisited, trieAllWordDictionary),
     ...words
   ].flat()
 };

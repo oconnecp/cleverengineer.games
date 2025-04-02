@@ -18,7 +18,11 @@ export const BoggleScore: React.FC<BoggleScoreProps> = ({ board, words, style })
   }, [words]);
 
   useEffect(() => {
-    board && board.length > 0 && setTotalPossibleScore(calculateTotalScore(findAllWords(board)));
+    if(board && board.length > 0){
+      findAllWords(board).then(words => {
+        setTotalPossibleScore(calculateTotalScore(words));
+      });
+    };
   }, [board]);
 
   return (
