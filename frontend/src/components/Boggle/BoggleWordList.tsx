@@ -38,16 +38,16 @@ export const BoggleWordList: React.FC<BoggleWordListProps> = ({ words }) => {
       <div style={scrollingStyle}>
         <div style={spacerStyle}/>
         {/* todo: refactor so that we get rid of the ul styling */}
-        <ul style={listStyle}>
+        <div style={listStyle}>
           {words.map((word, index) => (
-            index % 2 === 0 && (<li key={index}>{word}</li>)
+            index % 2 === 0 && (<div key={index}>{word}</div>)
           ))}
-        </ul>
-        <ul style={listStyle}>
+        </div>
+        <div style={listStyle}>
           {words.map((word, index) => (
-            index % 2 === 1 && (<li key={index}>{word}</li>)
+            index % 2 === 1 && (<div key={index}>{word}</div>)
           ))}
-        </ul>
+        </div>
         <div style={spacerStyle}/>
       </div>
     </div>
