@@ -43,30 +43,53 @@ export const Hamburger: React.FC<HamburgerProps> = ({ children }) => {
     left: 0,
     width: "24px",
     height: "24px",
-    padding: "2px",
+    padding: "4px",
   }
 
   const drawerStyle: React.CSSProperties = {
     position: "fixed",
     top: 0,
-    left: "28px",
+    left: 0,
     width: "40%",
     height: "100%",
     backgroundColor: "rgba(0, 0, 0, 0.5)",
     zIndex: 50,
   }
 
+  const innerDrawerStyle: React.CSSProperties = {
+    position: "fixed",
+    left: "32px",
+    padding: "8px",
+
+  }
+
+  const childStyling: React.CSSProperties = {
+    marginBottom: "8px",
+  }
+
   return (
     <div>
-      <div
-        style={hamburgerThinStyle}
-        onClick={() => setDrawerOpen(!drawerOpen)}
-      >
-        <MenuSVG />
-      </div>
+      {!drawerOpen && (
+        <div
+          style={hamburgerThinStyle}
+          onClick={() => setDrawerOpen(!drawerOpen)}
+        >
+          <MenuSVG />
+        </div>
+      )}
       {drawerOpen && (
         <div style={drawerStyle}>
-          {children}
+                  <div
+          style={hamburgerThinStyle}
+          onClick={() => setDrawerOpen(!drawerOpen)}
+        >
+          <MenuSVG />
+        </div>
+          <div style={innerDrawerStyle}>
+            {children && Array.isArray(children) && children.map((child, index) => (
+              <div style={childStyling} key={index}>{child}</div>
+            ))}
+          </div>
         </div>
       )}
     </div>
