@@ -10,12 +10,13 @@ function App() {
     display: "flex",
     flexDirection: "row",
     alignItems: "end",
-    marginRight: "3px",
+    marginRight: "5px",
   }
 
   const svgContainerStyle: React.CSSProperties = {
     width: "24px",
     height: "24px",
+    marginRight: "2px",
   }
 
 

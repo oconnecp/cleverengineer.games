@@ -21,7 +21,6 @@ export const Hamburger: React.FC<HamburgerProps> = ({ children }) => {
     display: "flex",
     flexDirection: "row",
     justifyContent: "end",
-    // backgroundColor: "#f0f0f0",
     position: "fixed",
     top: 0,
     left: 0,
@@ -60,7 +59,9 @@ export const Hamburger: React.FC<HamburgerProps> = ({ children }) => {
     position: "fixed",
     left: "32px",
     padding: "8px",
-
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "end",
   }
 
   const childStyling: React.CSSProperties = {
