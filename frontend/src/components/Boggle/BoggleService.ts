@@ -1,6 +1,10 @@
 import { Trie } from '../Trie/Trie';
 import { getAllWordDictionaryTree } from '../Trie/TrieDictionary';
 
+// getAllWordDictionaryTree can be called right now to start loading the trie
+// the endpoint utilizes the cache service so calling it here will not cause
+// multiple calls to the backend
+getAllWordDictionaryTree()
 
 // Pulled from the game rules this is the definition of the dice
 const dice: string[][] = [

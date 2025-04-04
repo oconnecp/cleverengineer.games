@@ -1,5 +1,3 @@
-import { random } from "lodash";
-
 export class TrieNode {
   children: { [key: string]: TrieNode };
   isEndOfWord: boolean;

@@ -1,31 +1,45 @@
-import { getAllWordDictionary, getPopularWordDictionary} from "../../services/DictionaryService";
+import { getAllWordDictionary, getPopularWordDictionary } from "../../services/DictionaryService";
 import { Trie } from "./Trie";
+import { CacheService } from "../../services/CacheService";
 
-let PopularDictionaryTree: Trie | null = null;
-let AllWordDictionaryTree: Trie | null = null;
+const cacheService = new CacheService();
 
 // Create a Trie and insert words from the dictionary
-const getAllWordDictionaryTree = async (): Promise<Trie>=>{
-  if(AllWordDictionaryTree === null){
-    const AllWordDictionary = await getAllWordDictionary();
-
-    AllWordDictionaryTree = new Trie();
-    AllWordDictionary.forEach(word => AllWordDictionaryTree!.insert(word));
+const getAllWordDictionaryTree = async (): Promise<Trie> => {
+  const allWordCacheKey = "allWordDictionaryTree";
+  if (!cacheService.checkEntry(allWordCacheKey)) {
+    cacheService.initializeEntry<Trie>(allWordCacheKey);
+  } else {
+    const cachedTrie = await cacheService.get<Trie>(allWordCacheKey);
+    return cachedTrie;
   }
-  return AllWordDictionaryTree!;
+
+  const AllWordDictionary = await getAllWordDictionary();
+  const AllWordDictionaryTree = new Trie();
+
+  AllWordDictionary.forEach(word => AllWordDictionaryTree!.insert(word));
+  cacheService.set<Trie>(allWordCacheKey, AllWordDictionaryTree);
+  return AllWordDictionaryTree;
 }
 
-const getPopularWordDictionaryTree = async (): Promise<Trie>=>{
-  if(PopularDictionaryTree === null){
-    const PopularWordDictionary = await getPopularWordDictionary();
+const getPopularWordDictionaryTree = async (): Promise<Trie> => {
+  const popularWordCacheKey = "popularWordDictionaryTree";
+  if (!cacheService.checkEntry(popularWordCacheKey)) {
+    cacheService.initializeEntry<Trie>(popularWordCacheKey);
+  } else {
+    const cachedTrie = await cacheService.get<Trie>(popularWordCacheKey);
+    return cachedTrie;
+  }
 
-    PopularDictionaryTree = new Trie();
-    PopularWordDictionary.forEach(word => {
-      if (word.length >= 3) {
-        PopularDictionaryTree!.insert(word);
-      }
-    });  }
-  return PopularDictionaryTree!;
+  const PopularWordDictionary = await getPopularWordDictionary();
+  const PopularWordDictionaryTree = new Trie();
+  PopularWordDictionary.forEach(word => {
+    if (word.length >= 3) {
+      PopularWordDictionaryTree.insert(word);
+    }
+  });
+  cacheService.set<Trie>(popularWordCacheKey, PopularWordDictionaryTree);
+  return PopularWordDictionaryTree;
 }
 
 // Export the trie for use in other parts of the application
