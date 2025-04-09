@@ -2,6 +2,7 @@ import express, { Request, Response } from 'express';
 import cors from 'cors';
 import session from 'express-session';
 import { PrismaClient } from '@prisma/client';
+import { AppDataSource } from "./src/db/data-source";
 import { initializeAuthService } from './src/services/AuthService';
 import AuthRouter from './src/routes/AuthRoutes';
 import { ADD_CORS, PORT, FRONTEND_ORIGIN, SESSION_SECRET } from './src/tools/Constants';
@@ -21,6 +22,16 @@ if (ADD_CORS) {
     credentials: true
   }));
 }
+
+AppDataSource.initialize()
+  .then(() => {
+    console.log("Data Source has been initialized!");
+    // Start your server or application logic here
+  })
+  .catch((err) => {
+    console.error("Error during Data Source initialization:", err);
+  });
+
 // logger middleware
 app.use((req: Request ,res:Response,next) =>{
   const time = new Date(Date.now()).toString();
