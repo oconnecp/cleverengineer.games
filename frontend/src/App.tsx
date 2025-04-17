@@ -4,6 +4,8 @@ import { ToastHandler } from './components/Toast/ToastHandler'
 import { Hamburger } from './components/Hamburger/Hamburger'
 import { GithubLogoSVG } from './assets/GithubLogo'
 import { LinkedInLogoSVG } from './assets/LinkedInLogo'
+import Login from './components/Authentication/Login'
+import User from './components/Authentication/User'
 
 function App() {
   const linkContainerStyle: React.CSSProperties = {
@@ -19,7 +21,6 @@ function App() {
     marginRight: "2px",
   }
 
-
   return (
     <>
       <Hamburger>
@@ -30,12 +31,13 @@ function App() {
           </div>
         </a>
         <a href="https://www.github.com/oconnecp">
-        <div style={linkContainerStyle}>
+          <div style={linkContainerStyle}>
             <div style={svgContainerStyle}><GithubLogoSVG /></div>
             <div>Github</div>
           </div>
         </a>
       </Hamburger>
+      <User></User>
       <BoggleGame />
       <ToastHandler />
     </>

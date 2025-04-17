@@ -1,7 +1,6 @@
-import {BACKEND_ORIGIN} from "../../tools/Constants";
-
-const googleAuthHref = new URL('/auth/google', BACKEND_ORIGIN).toString();
-const githubAuthHref = new URL('/auth/github', BACKEND_ORIGIN).toString();
+import { getFullUrl } from "../../services/ApiClient";
+const googleAuthHref = getFullUrl('auth/google');
+const githubAuthHref = getFullUrl('auth/github');
 
 const Login = () => {
   const handleGoogleLogin = () => {
