@@ -1,13 +1,10 @@
 import passport from 'passport';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import { Strategy as GitHubStrategy } from 'passport-github2';
-import { PrismaClient } from '@prisma/client';
 import { Application } from 'express';
 import { BACKEND_ORIGIN, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET } from '../tools/Constants';
 import { User } from '../db/entities/User';
-import { upsertUser } from './UserService';
-
-const prisma = new PrismaClient();
+import { upsertUser, getUserByIdAndSecret } from './UserService';
 
 export const initializeAuthService = (app: Application) => {
   app.use(passport.initialize());
@@ -18,7 +15,9 @@ export const initializeAuthService = (app: Application) => {
     callbackURL: `${BACKEND_ORIGIN}/auth/google/callback`
   },
     async (accessToken: string, refreshToken: string, profile: any, done: (error: any, user?: any) => void) => {
-      const saveableUser: Required<Omit<User, 'id'>> = {
+      console.log("Google profile:", profile);
+
+      const saveableUser: Required<Omit<User, 'id' | 'clientSecret'>> = {
         firstName: profile.name.givenName,
         lastName: profile.name.familyName,
         email: profile.emails[0].value,
@@ -29,7 +28,7 @@ export const initializeAuthService = (app: Application) => {
 
       const user = await upsertUser(saveableUser);
       if (!user) {
-        return done(new Error("Error saving user to database", {cause:{user}}));
+        return done(new Error("Error saving user to database", { cause: { user } }));
       }
 
       return done(null, user);
@@ -42,10 +41,8 @@ export const initializeAuthService = (app: Application) => {
   },
     async (accessToken: string, refreshToken: string, profile: any, done: (error: any, user?: any) => void) => {
       console.log("GitHub profile:", profile);
-      console.log("accessToken:", accessToken);
-      console.log("refreshToken:", refreshToken);
       const delimitedName = profile.displayName.split[' '];
-      const saveableUser: Required<Omit<User, 'id'>> = {
+      const saveableUser: Required<Omit<User, 'id' | 'clientSecret'>> = {
         firstName: delimitedName[0],
         lastName: delimitedName[delimitedName.length],
         email: profile.emails[0].value,
@@ -56,18 +53,29 @@ export const initializeAuthService = (app: Application) => {
 
       const user = await upsertUser(saveableUser);
       if (!user) {
-        return done(new Error("Error saving user to database", {cause:{user}}));
+        return done(new Error("Error saving user to database", { cause: { user } }));
       }
 
       return done(null, user);
     }));
 
+  type returnUserType = Pick<User, 'id' | 'email' | 'firstName' | 'lastName' | 'clientSecret'>;
+  const toReturnUserType = (user: User): returnUserType => {
+    return {
+      id: user.id,
+      email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      clientSecret: user.clientSecret
+    }
+  }
+
   passport.serializeUser((user: any, done) => {
-    done(null, user.id);
+    done(null, toReturnUserType(user));
   });
 
-  passport.deserializeUser(async (id: number, done) => {
-    const user = await prisma.user.findUnique({ where: { id } });
-    done(null, user);
+  passport.deserializeUser(async (userData: returnUserType, done) => {
+    const user = await getUserByIdAndSecret(userData.id, userData.clientSecret);
+      done(null, user);
   });
 }

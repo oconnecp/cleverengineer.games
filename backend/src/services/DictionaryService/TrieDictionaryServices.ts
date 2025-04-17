@@ -1,6 +1,7 @@
-import { getAllWordDictionary, getPopularWordDictionary } from "../../services/DictionaryService";
-import { Trie } from "./Trie";
-import { CacheService } from "../../services/CacheService";
+import { AllWordDictionary } from "./AllWordDictionary";
+import { PopularWordDictionary } from "./PopularWordDictionary";
+import { Trie } from "../../../shared/Trie";
+import { CacheService } from "../../../shared/CacheService";
 
 const cacheService = new CacheService();
 
@@ -14,7 +15,6 @@ const getAllWordDictionaryTree = async (): Promise<Trie> => {
     return cachedTrie;
   }
 
-  const AllWordDictionary = await getAllWordDictionary();
   const AllWordDictionaryTree = new Trie();
 
   AllWordDictionary.forEach(word => AllWordDictionaryTree!.insert(word));
@@ -31,7 +31,6 @@ const getPopularWordDictionaryTree = async (): Promise<Trie> => {
     return cachedTrie;
   }
 
-  const PopularWordDictionary = await getPopularWordDictionary();
   const PopularWordDictionaryTree = new Trie();
   PopularWordDictionary.forEach(word => {
     if (word.length >= 3) {

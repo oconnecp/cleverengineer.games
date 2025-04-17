@@ -22,4 +22,7 @@ export class User {
 
   @Column()
   authProvider!: string;
+
+  @Column({unique: true})
+  clientSecret!: string;
 }

@@ -13,5 +13,5 @@
     "forceConsistentCasingInFileNames": true,
     "outDir": "./dist"
   },
-  "include": ["server.ts", "src/**/*", "shared/types"]
+  "include": ["server.ts", "src/**/*", "shared/**/*"]
 }

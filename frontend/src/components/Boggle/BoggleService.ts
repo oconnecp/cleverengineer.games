@@ -1,5 +1,5 @@
-import { Trie } from '../Trie/Trie';
-import { getAllWordDictionaryTree } from '../Trie/TrieDictionary';
+import { Trie } from '../../../../shared/src/data/Trie';
+import { getAllWordDictionaryTree } from '../../services/TrieDictionaryService';
 
 // getAllWordDictionaryTree can be called right now to start loading the trie
 // the endpoint utilizes the cache service so calling it here will not cause

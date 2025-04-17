@@ -1,4 +1,4 @@
-import { getPopularWordDictionaryTree } from '../Trie/TrieDictionary';
+import { getPopularWordDictionaryTree } from '../../services/TrieDictionaryService';
 
 export const generateBoard = (): string[][] => {
   throw new Error("Not implemented");

@@ -1,7 +1,6 @@
 import express, { Request, Response } from 'express';
 import cors from 'cors';
 import session from 'express-session';
-import { PrismaClient } from '@prisma/client';
 import { AppDataSource } from "./src/db/data-source";
 import { initializeAuthService } from './src/services/AuthService';
 import AuthRouter from './src/routes/AuthRoutes';
@@ -9,7 +8,6 @@ import { ADD_CORS, PORT, FRONTEND_ORIGIN, SESSION_SECRET } from './src/tools/Con
 import DictionaryRouter from './src/routes/DictionaryRoutes';
 
 const app = express();
-const prisma = new PrismaClient();
 const baseUrl = '/api';
 
 // Configure CORS to allow requests from the frontend
@@ -46,10 +44,10 @@ initializeAuthService(app);
 
 app.use(`${baseUrl}/auth`, AuthRouter);
 
-app.get(`${baseUrl}/users`, async (req: Request, res: Response) => {
-  const users = await prisma.user.findMany();
-  res.json(users);
-});
+// app.get(`${baseUrl}/users`, async (req: Request, res: Response) => {
+//   const users = await prisma.user.findMany();
+//   res.json(users);
+// });
 
 app.use(`${baseUrl}/dictionary`, DictionaryRouter);
 

@@ -2,8 +2,24 @@ import { AppDataSource } from "../db/data-source";
 import { User } from "../db/entities/User";
 import { DB_ENCRYPTION_KEY } from "../tools/Constants";
 import { encrypt, decrypt } from "./EncryptionService"
+import crypto from "crypto";
 
 const userRepository = AppDataSource.getRepository(User);
+
+export const getUserByIdAndSecret = async (id: string, clientSecret: string): Promise<User | null> => {
+  const user = await userRepository.findOneBy({ id });
+  if (!user) {
+    console.log("User not found", { cause: { id, clientSecret } });
+    return null;
+  }
+
+  if(user.clientSecret !== clientSecret) {
+    console.log("Client secret does not match", { cause: { id, clientSecret } });
+    return null;
+  }
+
+  return user;
+}
 
 export const getUserByEmail = async (email: string): Promise<User | null> => {
   const user = await userRepository.findOneBy({ email });
@@ -17,7 +33,7 @@ export const getUserByEmail = async (email: string): Promise<User | null> => {
   return user;
 };
 
-export const upsertUser = async (user: User | Required<Omit<User, 'id'>>): Promise<User> => {
+export const upsertUser = async (user: User | Required<Omit<User, 'id' | 'clientSecret'>>): Promise<User> => {
   const existingUser = await getUserByEmail(user.email);
 
   if (existingUser) {
@@ -30,6 +46,7 @@ export const upsertUser = async (user: User | Required<Omit<User, 'id'>>): Promi
   } else {
     user.accessToken = encrypt(user.accessToken, DB_ENCRYPTION_KEY);
     user.refreshToken = encrypt(user.refreshToken, DB_ENCRYPTION_KEY);
+    (user as User).clientSecret = crypto.randomBytes(32).toString("hex");
     return await userRepository.save(user);
   }
 }
