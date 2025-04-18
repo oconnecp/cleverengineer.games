@@ -1,16 +1,24 @@
 {
-  "name": "dragon-shared",
+  "name": "clever-engineer-games-shared",
   "version": "1.0.0",
-  "main": "dist/index.js",
+  "type": "module",
+  "main": "dist/index.cjs.js",
+  "module": "dist/index.esm.js",
   "types": "dist/index.d.ts",
+  "readme": "README.md",
+  "license": "MIT",
   "scripts": {
-    "build": "rimraf ../frontend/shared && rimraf ../backend/shared && cpy ./src/**/* ../frontend/shared/ --flat && cpy ./src/**/* ../backend/shared/ --flat"
+    "build": "rimraf dist && tsc && rollup -c"
   },
   "devDependencies": {
-    "cpy-cli": "^5.0.0",
-    "typescript": "^4.0.0"
-  },
-  "dependencies": {
-    "rimraf": "^6.0.1"
+    "@rollup/plugin-commonjs": "^24.0.0",
+    "@rollup/plugin-node-resolve": "^15.0.0",
+    "@rollup/plugin-typescript": "^10.0.0",
+    "@types/node": "^22.14.1",
+    "rimraf": "^6.0.1",
+    "rollup": "^3.29.5",
+    "rollup-plugin-dts": "^5.0.0",
+    "tslib": "^2.8.1",
+    "typescript": "^4.9.5"
   }
 }

@@ -1,0 +1,19 @@
+# Exclude source files
+src/
+
+#exclude build output
+dist/data
+dist/services
+dist/types
+dist/dist
+
+# Exclude build configuration
+rollup.config.js
+tsconfig.json
+
+# Exclude node_modules (npm automatically excludes this, but it's good practice to include it here)
+node_modules/
+
+# Exclude other unnecessary files
+*.log
+*.lock
