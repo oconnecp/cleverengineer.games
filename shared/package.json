@@ -4,10 +4,13 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "cpy src/**/* ../frontend/shared/ && cpy src/*/* ../backend/shared/"
+    "build": "rimraf ../frontend/shared && rimraf ../backend/shared && cpy ./src/**/* ../frontend/shared/ --flat && cpy ./src/**/* ../backend/shared/ --flat"
   },
   "devDependencies": {
     "cpy-cli": "^5.0.0",
     "typescript": "^4.0.0"
+  },
+  "dependencies": {
+    "rimraf": "^6.0.1"
   }
 }

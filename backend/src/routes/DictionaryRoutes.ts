@@ -17,7 +17,7 @@ DictionaryRouter.get(`/popular/trie`, async (_req: Request, res: Response) => {
 });
 
 DictionaryRouter.get(`/all/trie`, async (_req: Request, res: Response) => {
-  const allWordDictionaryTrie = await getPopularWordDictionaryTree();
+  const allWordDictionaryTrie = await getAllWordDictionaryTree();
   res.send(allWordDictionaryTrie);
 });
 

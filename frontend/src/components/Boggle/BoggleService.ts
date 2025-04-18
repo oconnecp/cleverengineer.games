@@ -1,4 +1,4 @@
-import { Trie } from '../../../../shared/src/data/Trie';
+import { Trie } from '../../../shared/Trie';
 import { getAllWordDictionaryTree } from '../../services/TrieDictionaryService';
 
 // getAllWordDictionaryTree can be called right now to start loading the trie

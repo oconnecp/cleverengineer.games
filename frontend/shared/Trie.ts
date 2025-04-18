@@ -89,4 +89,11 @@ export class Trie {
   
     return returnString;
   }
+
+  //Static Method to rehydrate a Trie instance
+  static rehydrate(trie: Trie): Trie {
+    const hydratedTrie = new Trie();
+    hydratedTrie.root = trie.root;
+    return hydratedTrie;
+  }
 }

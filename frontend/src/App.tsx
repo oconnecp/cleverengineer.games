@@ -4,7 +4,6 @@ import { ToastHandler } from './components/Toast/ToastHandler'
 import { Hamburger } from './components/Hamburger/Hamburger'
 import { GithubLogoSVG } from './assets/GithubLogo'
 import { LinkedInLogoSVG } from './assets/LinkedInLogo'
-import Login from './components/Authentication/Login'
 import User from './components/Authentication/User'
 
 function App() {

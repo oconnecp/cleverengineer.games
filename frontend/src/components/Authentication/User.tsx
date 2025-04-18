@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { BaseUserType } from '../../../shared/types/UserType';
+import { BaseUserType } from '../../../shared/UserType';
 import Login from "./Login";
 
 export default function User() {
