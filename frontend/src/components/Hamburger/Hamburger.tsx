@@ -55,6 +55,15 @@ export const Hamburger: React.FC<HamburgerProps> = ({ children }) => {
     zIndex: 50,
   }
 
+  const offClickBlockStyle: React.CSSProperties = {
+    position: "fixed",
+    top: 0,
+    left: "40%",
+    width: "60%",
+    height: "100%",
+    zIndex: 50,
+  }
+
   const innerDrawerStyle: React.CSSProperties = {
     position: "fixed",
     left: "32px",
@@ -79,19 +88,22 @@ export const Hamburger: React.FC<HamburgerProps> = ({ children }) => {
         </div>
       )}
       {drawerOpen && (
+        <>
         <div style={drawerStyle}>
-                  <div
-          style={hamburgerThinStyle}
-          onClick={() => setDrawerOpen(!drawerOpen)}
-        >
-          <MenuSVG />
-        </div>
+          <div
+            style={hamburgerThinStyle}
+            onClick={() => setDrawerOpen(!drawerOpen)}
+          >
+            <MenuSVG />
+          </div>
           <div style={innerDrawerStyle}>
             {children && Array.isArray(children) && children.map((child, index) => (
               <div style={childStyling} key={index}>{child}</div>
             ))}
           </div>
         </div>
+        <div style={offClickBlockStyle} onClick={() => setDrawerOpen(!drawerOpen)}/>
+        </>
       )}
     </div>
   );
