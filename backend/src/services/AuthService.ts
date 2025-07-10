@@ -1,13 +1,13 @@
 import passport from 'passport';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import { Strategy as GitHubStrategy } from 'passport-github2';
-import { PrismaClient } from '@prisma/client';
+// import { PrismaClient } from '@prisma/client';
 import { Application } from 'express';
 import { BACKEND_ORIGIN, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET } from '../tools/Constants';
 import { User } from '../db/entities/User';
 import { upsertUser } from './UserService';
 
-const prisma = new PrismaClient();
+// const prisma = new PrismaClient();
 
 export const initializeAuthService = (app: Application) => {
   app.use(passport.initialize());
@@ -67,7 +67,9 @@ export const initializeAuthService = (app: Application) => {
   });
 
   passport.deserializeUser(async (id: number, done) => {
-    const user = await prisma.user.findUnique({ where: { id } });
-    done(null, user);
+    //todo, update to typeorm
+    // const user = await prisma.user.findUnique({ where: { id } });
+    done(null, {} as User); // Replace with actual user retrieval logic});
+    // done(null, user);
   });
 }

@@ -1,6 +1,6 @@
 import './App.css'
 import React, { Suspense } from "react";
-import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useNavigate, Link } from 'react-router-dom';
 import { ToastHandler } from './components/Toast/ToastHandler'
 import { Hamburger } from './components/Hamburger/Hamburger'
 import { GithubLogoSVG } from './assets/GithubLogo'
@@ -28,20 +28,20 @@ function App() {
   }
 
   return (
-    <>
+    <BrowserRouter>
       <Hamburger>
-        <a href="/">
+        <Link to="/">
           <div style={linkContainerStyle}>
             <div style={svgContainerStyle}><GameIconSVG /></div>
-            <div>Home</div>
+            <div>Game</div>
           </div>
-        </a>
-        <a href="/about">
+        </Link>
+        <Link to="/about">
           <div style={linkContainerStyle}>
             <div style={svgContainerStyle}><PersonSVG /></div>
             <div>About</div>
           </div>
-        </a>
+        </Link>
         <a href="https://www.linkedin.com/in/ChristopherOConnellDeveloper/">
           <div style={linkContainerStyle}>
             <div style={svgContainerStyle}><LinkedInLogoSVG /></div>
@@ -55,20 +55,17 @@ function App() {
           </div>
         </a>
       </Hamburger>
-      {/* <User></User> */}
-      <BrowserRouter>
-        <Suspense fallback={<div>Loading...</div>}>
+      <Suspense fallback={<div>Loading...</div>}>
 
-          <Routes>
-            <Route path="/about" element={<About />} />
-            <Route path="*" element={<BoggleGame />} />
+        <Routes>
+          <Route path="/about" element={<About />} />
+          <Route path="*" element={<BoggleGame />} />
 
-          </Routes>
-        </Suspense>
+        </Routes>
+      </Suspense>
 
-      </BrowserRouter>
       <ToastHandler />
-    </>
+    </BrowserRouter>
   )
 }
 

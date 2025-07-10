@@ -1,8 +1,9 @@
 export default function About() {
   const generalTextStyle: React.CSSProperties = {
-    padding: "10px",
+    padding: "20px",
     height: "100%",
     overflowY: "auto",
+    maxWidth: "1024px"
   }
 
   return (

@@ -4,8 +4,8 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "start": "npm run initialize-database && npm run start-backend",
-    "build": "tsc -b && mv dist/server.js dist/server.cjs",
+    "start": "npm run start-backend",
+    "build": "tsc -b && node scripts/rename-server.js",
     "initialize-database": "npx prisma generate",
     "start-backend": "node dist/server.cjs",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -15,7 +15,6 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
-    "@prisma/client": "^6.4.1",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
@@ -23,8 +22,9 @@
     "passport": "^0.7.0",
     "passport-github2": "^0.1.12",
     "passport-google-oauth20": "^2.0.0",
+    "pg": "^8.16.3",
     "reflect-metadata": "^0.2.2",
-    "typeorm": "^0.3.22"
+    "typeorm": "^0.3.25"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",
@@ -34,7 +34,6 @@
     "@types/passport": "^1.0.17",
     "@types/passport-github2": "^1.2.9",
     "@types/passport-google-oauth20": "^2.0.16",
-    "prisma": "^6.4.1",
     "typescript": "~5.7.2"
   }
 }
