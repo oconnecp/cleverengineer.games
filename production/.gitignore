@@ -1,2 +1,4 @@
 certbot
-cerbot/*
+certbot/*
+secrets
+secrets/*
