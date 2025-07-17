@@ -11,6 +11,7 @@ import { PersonSVG } from './assets/PersonSVG';
 import { GameIconSVG } from './assets/GameIconSVG';
 import Login from './components/Authentication/Login';
 import { FeatureFlagWrapper } from './components/FeatureFlags/FeatureFlagWrapper';
+import { InfoSVG } from './assets/InfoSVG';
 
 const About = React.lazy(() => import("./components/About/About"));
 const BoggleGame = React.lazy(() => import("./components/Boggle/BoggleGame"));
@@ -43,7 +44,7 @@ function App() {
         </Link>
         <Link to="/about">
           <div style={linkContainerStyle}>
-            <div style={svgContainerStyle}><PersonSVG /></div>
+            <div style={svgContainerStyle}><InfoSVG /></div>
             <div>About</div>
           </div>
         </Link>
