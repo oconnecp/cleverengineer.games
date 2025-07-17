@@ -1,10 +1,13 @@
 import './App.css'
 import React, { Suspense } from "react";
-import { BrowserRouter, Routes, Route, useNavigate, Link } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import { ToastHandler } from './components/Toast/ToastHandler'
 import { Hamburger } from './components/Hamburger/Hamburger'
 import { GithubLogoSVG } from './assets/GithubLogo'
 import { LinkedInLogoSVG } from './assets/LinkedInLogo'
+import { FeatureFlags } from './components/FeatureFlags/FeatureFlags'
+import { Features } from './tools/Features';
+
 import User from './components/Authentication/User'
 import { PersonSVG } from './assets/PersonSVG';
 import { GameIconSVG } from './assets/GameIconSVG';
@@ -26,6 +29,8 @@ function App() {
     height: "24px",
     marginRight: "2px",
   }
+
+  console.log("Features", Features);
 
   return (
     <BrowserRouter>
@@ -59,6 +64,7 @@ function App() {
 
         <Routes>
           <Route path="/about" element={<About />} />
+          <Route path="/setfeature/:featureId" element={<FeatureFlags/>} />
           <Route path="*" element={<BoggleGame />} />
 
         </Routes>
