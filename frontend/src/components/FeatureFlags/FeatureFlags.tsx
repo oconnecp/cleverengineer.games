@@ -1,5 +1,5 @@
 import { useParams, useNavigate } from 'react-router-dom';
-import { Features, setFeature } from '../../tools/Features';
+import { Features, setFeature } from './FeatureService';
 import React, { useEffect } from "react";
 
 export const FeatureFlags: React.FC = () => {

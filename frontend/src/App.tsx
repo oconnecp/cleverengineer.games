@@ -6,11 +6,11 @@ import { Hamburger } from './components/Hamburger/Hamburger'
 import { GithubLogoSVG } from './assets/GithubLogo'
 import { LinkedInLogoSVG } from './assets/LinkedInLogo'
 import { FeatureFlags } from './components/FeatureFlags/FeatureFlags'
-import { Features } from './tools/Features';
-
-import User from './components/Authentication/User'
+import { Features } from './components/FeatureFlags/FeatureService';
 import { PersonSVG } from './assets/PersonSVG';
 import { GameIconSVG } from './assets/GameIconSVG';
+import Login from './components/Authentication/Login';
+import { FeatureFlagWrapper } from './components/FeatureFlags/FeatureFlagWrapper';
 
 const About = React.lazy(() => import("./components/About/About"));
 const BoggleGame = React.lazy(() => import("./components/Boggle/BoggleGame"));
@@ -47,6 +47,14 @@ function App() {
             <div>About</div>
           </div>
         </Link>
+        <FeatureFlagWrapper featureId="LOGIN">
+        <Link to="/login">
+          <div style={linkContainerStyle}>
+            <div style={svgContainerStyle}><PersonSVG /></div>
+            <div>Login</div>
+          </div>
+        </Link>
+        </FeatureFlagWrapper>
         <a href="https://www.linkedin.com/in/ChristopherOConnellDeveloper/">
           <div style={linkContainerStyle}>
             <div style={svgContainerStyle}><LinkedInLogoSVG /></div>
@@ -60,13 +68,13 @@ function App() {
           </div>
         </a>
       </Hamburger>
-      <Suspense fallback={<div>Loading...</div>}>
 
+      <Suspense fallback={<div>Loading...</div>}>
         <Routes>
           <Route path="/about" element={<About />} />
+          <Route path="/login" element={<Login />} />
           <Route path="/setfeature/:featureId" element={<FeatureFlags/>} />
           <Route path="*" element={<BoggleGame />} />
-
         </Routes>
       </Suspense>
 
