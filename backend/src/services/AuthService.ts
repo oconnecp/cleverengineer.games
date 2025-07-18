@@ -12,10 +12,15 @@ import { upsertUser } from './UserService';
 export const initializeAuthService = (app: Application) => {
   app.use(passport.initialize());
   app.use(passport.session());
+
+  // Configure Google OAuth strategy
+  const googleCallbackURL = `${BACKEND_ORIGIN}/auth/google/callback`;
+  console.log("Google Callback URL:", googleCallbackURL);
+  
   passport.use(new GoogleStrategy({
     clientID: GOOGLE_CLIENT_ID || '',
     clientSecret: GOOGLE_CLIENT_SECRET || '',
-    callbackURL: `${BACKEND_ORIGIN}/auth/google/callback`
+    callbackURL: googleCallbackURL
   },
     async (accessToken: string, refreshToken: string, profile: any, done: (error: any, user?: any) => void) => {
       const saveableUser: Required<Omit<User, 'id'>> = {
@@ -29,16 +34,20 @@ export const initializeAuthService = (app: Application) => {
 
       const user = await upsertUser(saveableUser);
       if (!user) {
-        return done(new Error("Error saving user to database", {cause:{user}}));
+        return done(new Error("Error saving user to database", { cause: { user } }));
       }
 
       return done(null, user);
     }));
 
+  // Configure GitHub OAuth strategy
+  const githubCallbackURL = `${BACKEND_ORIGIN}/auth/github/callback`;
+  console.log("GitHub Callback URL:", githubCallbackURL);
+
   passport.use(new GitHubStrategy({
     clientID: GITHUB_CLIENT_ID || '',
     clientSecret: GITHUB_CLIENT_SECRET || '',
-    callbackURL: `${BACKEND_ORIGIN}/auth/github/callback`
+    callbackURL: githubCallbackURL
   },
     async (accessToken: string, refreshToken: string, profile: any, done: (error: any, user?: any) => void) => {
       console.log("GitHub profile:", profile);
@@ -56,7 +65,7 @@ export const initializeAuthService = (app: Application) => {
 
       const user = await upsertUser(saveableUser);
       if (!user) {
-        return done(new Error("Error saving user to database", {cause:{user}}));
+        return done(new Error("Error saving user to database", { cause: { user } }));
       }
 
       return done(null, user);
