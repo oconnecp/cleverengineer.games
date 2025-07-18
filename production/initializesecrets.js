@@ -20,12 +20,13 @@ if (!fs.existsSync(secretsDir)) {
 // Create each secret file if it doesn't exist
 secretFiles.forEach(filename => {
   const filePath = path.join(secretsDir, filename);
-  const lowercaseFilePath = path.join(secretsDir, filename.toLocaleLowerCase);
+  const lowercaseFilePath = path.join(secretsDir, filename.toLowerCase());
   if (!fs.existsSync(filePath)) {
     fs.writeFileSync(filePath, '', { encoding: 'utf-8' });
     console.log(`Created empty secret file: ${filename}`);
   } else {
     console.log(`Secret file already exists: ${filename}`);
-    fs.renameSync(filePath, filePath.toLowerCase);
+    fs.renameSync(filePath, lowercaseFilePath);
+    console.log(`Renamed ${filename} to ${filename.toLowerCase()}`);
   }
 });
