@@ -3,10 +3,10 @@ const path = require('path');
 
 const secretsDir = path.join(__dirname, 'secrets');
 const secretFiles = [
-  'GOOGLE_CLIENT_ID.txt',
-  'GOOGLE_CLIENT_SECRET.txt',
-  'GITHUB_CLIENT_ID.txt',
-  'GITHUB_CLIENT_SECRET.txt',
+  'google_client_id.txt',
+  'google_client_secret.txt',
+  'github_client_id.txt',
+  'github_client_secret.txt',
 ];
 
 // Create the secrets directory if it doesn't exist
@@ -20,13 +20,10 @@ if (!fs.existsSync(secretsDir)) {
 // Create each secret file if it doesn't exist
 secretFiles.forEach(filename => {
   const filePath = path.join(secretsDir, filename);
-  const lowercaseFilePath = path.join(secretsDir, filename.toLowerCase());
   if (!fs.existsSync(filePath)) {
     fs.writeFileSync(filePath, '', { encoding: 'utf-8' });
     console.log(`Created empty secret file: ${filename}`);
   } else {
     console.log(`Secret file already exists: ${filename}`);
-    fs.renameSync(filePath, lowercaseFilePath);
-    console.log(`Renamed ${filename} to ${filename.toLowerCase()}`);
   }
 });
