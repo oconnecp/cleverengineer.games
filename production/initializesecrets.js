@@ -7,6 +7,7 @@ const secretFiles = [
   'google_client_secret.txt',
   'github_client_id.txt',
   'github_client_secret.txt',
+  'db_encryption_key.txt',
 ];
 
 // Create the secrets directory if it doesn't exist

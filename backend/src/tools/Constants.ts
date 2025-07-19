@@ -43,7 +43,11 @@ export const DB_USERNAME = process.env.DB_USERNAME || 'user';
 export const DB_PASSWORD = process.env.DB_PASSWORD || 'password';
 export const DB_NAME = process.env.DB_NAME || 'mydb';
 
-export const DB_ENCRYPTION_KEY = process.env.DB_ENCRYPTION_KEY || 'secret';
+// Must be 32 characters for AES-256
+export const DB_ENCRYPTION_KEY = process.env.DB_ENCRYPTION_KEY || 'secretsecretsecretsecretsecretsecretsecret'; 
+if (DB_ENCRYPTION_KEY.length !== 32) {
+  throw new Error('ENCRYPTION_KEY must be 32 characters long for AES-256 encryption.');
+}
 
 function readSecretFile(filePath: string): string {
   try {

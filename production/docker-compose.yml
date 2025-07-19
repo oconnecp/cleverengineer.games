@@ -37,11 +37,13 @@ services:
       GOOGLE_CLIENT_SECRET: /run/secrets/google_client_secret
       GITHUB_CLIENT_ID: /run/secrets/github_client_id
       GITHUB_CLIENT_SECRET: /run/secrets/github_client_secret
+      DB_ENCRYPTION_KEY: /run/secrets/db_encryption_key
     secrets:
       - google_client_id
       - google_client_secret
       - github_client_id
       - github_client_secret
+      - db_encryption_key
     depends_on:
       - db
     restart: always
@@ -73,3 +75,5 @@ secrets:
     file: ./secrets/github_client_id.txt
   github_client_secret:
     file: ./secrets/github_client_secret.txt
+  db_encryption_key:
+    file: ./secrets/db_encryption_key.txt
