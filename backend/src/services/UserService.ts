@@ -41,13 +41,13 @@ export const upsertUser = async (user: User | Required<Omit<User, 'id'>>): Promi
   if (existingUser) {
     existingUser.firstName = user.firstName || existingUser.firstName;
     existingUser.lastName = user.lastName || existingUser.firstName;
-    existingUser.accessToken = encrypt(user.accessToken || existingUser.accessToken, DB_ENCRYPTION_KEY);
-    existingUser.refreshToken = encrypt(user.refreshToken || existingUser.refreshToken, DB_ENCRYPTION_KEY);
+    existingUser.accessToken = encrypt(user.accessToken || existingUser.accessToken || '', DB_ENCRYPTION_KEY);
+    existingUser.refreshToken = encrypt(user.refreshToken || existingUser.refreshToken || '', DB_ENCRYPTION_KEY);
     existingUser.authProvider = user.authProvider || existingUser.authProvider;
     return await userRepository.save(existingUser);
   } else {
-    user.accessToken = encrypt(user.accessToken, DB_ENCRYPTION_KEY);
-    user.refreshToken = encrypt(user.refreshToken, DB_ENCRYPTION_KEY);
+    user.accessToken = encrypt(user.accessToken || '', DB_ENCRYPTION_KEY);
+    user.refreshToken = encrypt(user.refreshToken || '', DB_ENCRYPTION_KEY);
     return await userRepository.save(user);
   }
 }

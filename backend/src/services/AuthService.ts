@@ -20,7 +20,8 @@ export const initializeAuthService = (app: Application) => {
   passport.use(new GoogleStrategy({
     clientID: GOOGLE_CLIENT_ID || '',
     clientSecret: GOOGLE_CLIENT_SECRET || '',
-    callbackURL: googleCallbackURL
+    callbackURL: googleCallbackURL,
+    
   },
     async (accessToken: string, refreshToken: string, profile: any, done: (error: any, user?: any) => void) => {
       try {
