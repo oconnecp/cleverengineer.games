@@ -41,7 +41,7 @@ app.use(express.json());
 app.use(session({ secret: SESSION_SECRET, resave: false, saveUninitialized: true }));
 
 initializeAuthService(app);
-const pgSession = require('connect-pg-simple')(session);
+//const pgSession = require('connect-pg-simple')(session);
 
 // Use the existing TypeORM connection pool
 // app.use(session({
