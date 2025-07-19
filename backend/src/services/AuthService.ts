@@ -5,7 +5,7 @@ import { Strategy as GitHubStrategy } from 'passport-github2';
 import { Application } from 'express';
 import { BACKEND_ORIGIN, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET } from '../tools/Constants';
 import { User } from '../db/entities/User';
-import { upsertUser } from './UserService';
+import { upsertUser, getUserById } from './UserService';
 
 // const prisma = new PrismaClient();
 
@@ -16,28 +16,37 @@ export const initializeAuthService = (app: Application) => {
   // Configure Google OAuth strategy
   const googleCallbackURL = `${BACKEND_ORIGIN}/api/auth/google/callback`;
   console.log("Google Callback URL:", googleCallbackURL);
-  
+
   passport.use(new GoogleStrategy({
     clientID: GOOGLE_CLIENT_ID || '',
     clientSecret: GOOGLE_CLIENT_SECRET || '',
     callbackURL: googleCallbackURL
   },
     async (accessToken: string, refreshToken: string, profile: any, done: (error: any, user?: any) => void) => {
-      const saveableUser: Required<Omit<User, 'id'>> = {
-        firstName: profile.name.givenName,
-        lastName: profile.name.familyName,
-        email: profile.emails[0].value,
-        accessToken: accessToken,
-        refreshToken: refreshToken,
-        authProvider: 'google'
-      }
+      try {
+        const saveableUser = {
+          firstName: profile.name.givenName,
+          lastName: profile.name.familyName,
+          email: profile.emails[0].value,
+          accessToken,
+          refreshToken,
+          authProvider: 'google'
+        };
 
-      const user = await upsertUser(saveableUser);
-      if (!user) {
-        return done(new Error("Error saving user to database", { cause: { user } }));
-      }
+        console.log("Google profile:", profile);
+        console.log("accessToken:", accessToken);
+        console.log("refreshToken:", refreshToken);
+        console.log("Saveable User:", saveableUser);
 
-      return done(null, user);
+        const user = await upsertUser(saveableUser);
+        if (!user) {
+          return done(new Error("Error saving user to database"));
+        }
+        return done(null, user);
+      } catch (err) {
+        console.error("Error in GoogleStrategy:", err);
+        return done(err);
+      }
     }));
 
   // Configure GitHub OAuth strategy
@@ -78,7 +87,9 @@ export const initializeAuthService = (app: Application) => {
   passport.deserializeUser(async (id: number, done) => {
     //todo, update to typeorm
     // const user = await prisma.user.findUnique({ where: { id } });
-    done(null, {} as User); // Replace with actual user retrieval logic});
+    const user = await getUserById(id.toString());
+    done(null, user); // Replace with actual user retrieval logic});
+
     // done(null, user);
   });
 }

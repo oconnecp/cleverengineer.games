@@ -17,6 +17,17 @@ export const getUserByEmail = async (email: string): Promise<User | null> => {
   return user;
 };
 
+export const getUserById = async (id: string): Promise<User | null> => {
+  const user = await userRepository.findOneBy({ id });
+  if (!user) {
+    return null;
+  }
+  user.accessToken = decrypt(user.accessToken, DB_ENCRYPTION_KEY);
+  user.refreshToken = decrypt(user.refreshToken, DB_ENCRYPTION_KEY);
+  return user;
+};
+
+
 export const upsertUser = async (user: User | Required<Omit<User, 'id'>>): Promise<User> => {
   const existingUser = await getUserByEmail(user.email);
 
