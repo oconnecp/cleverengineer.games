@@ -28,6 +28,7 @@ export const initializeAuthService = (app: Application) => {
         const saveableUser = {
           firstName: profile.name.givenName,
           lastName: profile.name.familyName,
+          profilePic: profile.photos?.[0]?.value || null,
           email: profile.emails[0].value,
           accessToken,
           refreshToken,
@@ -61,8 +62,9 @@ export const initializeAuthService = (app: Application) => {
       const delimitedName = profile.displayName.split[' '];
       const saveableUser: Required<Omit<User, 'id'>> = {
         firstName: delimitedName[0],
-        lastName: delimitedName[delimitedName.length],
+        lastName: delimitedName[delimitedName.length - 1],
         email: profile.emails[0].value,
+        profilePic: profile.photos?.[0]?.value || null,
         accessToken: accessToken,
         refreshToken: refreshToken,
         authProvider: 'github'

@@ -14,6 +14,9 @@ export class User {
   @Column()
   lastName!: string;
 
+  @Column({ nullable: true })
+  profilePic?: string; // Optional field for profile picture URL
+
   @Column()
   accessToken!: string;
 
