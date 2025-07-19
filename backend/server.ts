@@ -41,6 +41,19 @@ app.use(express.json());
 app.use(session({ secret: SESSION_SECRET, resave: false, saveUninitialized: true }));
 
 initializeAuthService(app);
+const pgSession = require('connect-pg-simple')(session);
+
+// Use the existing TypeORM connection pool
+// app.use(session({
+//   store: new pgSession({
+//     pool: (AppDataSource.driver as any).master, // Use TypeORM's database connection pool
+//     tableName: 'session'
+//   }),
+//   secret: SESSION_SECRET,
+//   resave: false,
+//   saveUninitialized: true,
+//   cookie: { secure: true } // set to true if using HTTPS
+// }));
 
 app.use(`${baseUrl}/auth`, AuthRouter);
 
