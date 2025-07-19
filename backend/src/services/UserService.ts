@@ -5,6 +5,13 @@ import { encrypt, decrypt } from "./EncryptionService"
 
 const userRepository = AppDataSource.getRepository(User);
 
+console.log('DB_ENCRYPTION_KEY:', DB_ENCRYPTION_KEY);
+if (DB_ENCRYPTION_KEY.length !== 32) {
+  throw new Error('ENCRYPTION_KEY must be 32 characters long for AES-256 encryption.');
+}else {
+  console.log('DB_ENCRYPTION_KEY is valid length:', DB_ENCRYPTION_KEY.length);
+}
+
 export const getUserByEmail = async (email: string): Promise<User | null> => {
   const user = await userRepository.findOneBy({ email });
   if (!user) {
