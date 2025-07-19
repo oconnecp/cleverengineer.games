@@ -21,7 +21,7 @@ export const initializeAuthService = (app: Application) => {
     clientID: GOOGLE_CLIENT_ID || '',
     clientSecret: GOOGLE_CLIENT_SECRET || '',
     callbackURL: googleCallbackURL,
-    
+
   },
     async (accessToken: string, refreshToken: string, profile: any, done: (error: any, user?: any) => void) => {
       try {
@@ -33,11 +33,6 @@ export const initializeAuthService = (app: Application) => {
           refreshToken,
           authProvider: 'google'
         };
-
-        console.log("Google profile:", profile);
-        console.log("accessToken:", accessToken);
-        console.log("refreshToken:", refreshToken);
-        console.log("Saveable User:", saveableUser);
 
         const user = await upsertUser(saveableUser);
         if (!user) {
@@ -86,11 +81,7 @@ export const initializeAuthService = (app: Application) => {
   });
 
   passport.deserializeUser(async (id: number, done) => {
-    //todo, update to typeorm
-    // const user = await prisma.user.findUnique({ where: { id } });
     const user = await getUserById(id.toString());
-    done(null, user); // Replace with actual user retrieval logic});
-
-    // done(null, user);
+    done(null, user);
   });
 }
