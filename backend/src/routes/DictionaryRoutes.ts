@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express';
-import { getAllWordDictionary, getPopularWordDictionary } from '../services/DictionaryService/DictionaryService';
+import { getAllWordDictionary, getPopularWordDictionary } from '../services/Dictionary/DictionaryService';
 const DictionaryRouter = express.Router();
 
 DictionaryRouter.get(`/popular`, async (req: Request, res: Response) => {

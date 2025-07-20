@@ -1,5 +1,6 @@
-import { Trie } from './Trie';
-import { getPopularWordDictionaryTree, getAllWordDictionaryTree } from './TrieDictionary';
+import { Trie } from '../Trie/Trie';
+import { getPopularWordDictionaryTree, getAllWordDictionaryTree } from '../Trie/TrieDictionaryService';
+import { MovesLengthMismatchError, NotAdjacentError, RepeatedLetterError, WordMismatchError, WordTooShortError } from './BoggleError';
 
 // getAllWordDictionaryTree can be called right now to start loading the trie
 // the endpoint utilizes the cache service so calling it here will not cause
@@ -54,6 +55,65 @@ export const isValidWord = async (word: string): Promise<boolean> => {
   const trieAllWordDictionary = await getAllWordDictionaryTree();
   return trieAllWordDictionary.search(searchableWord);
 };
+
+
+export const isValidMove = (word:string, moves: { row: number, col: number }[], board:string[][]): boolean => {
+  // Check if the word is too short
+  if (word.length < 3) {
+    throw new WordTooShortError();
+  }
+
+  // Check if the word is valid
+  if (!isValidWord(word)) {
+    throw new WordTooShortError();
+  }
+
+  // Check if the moves are valid
+  if (moves.length !== word.length) {
+    throw new MovesLengthMismatchError();
+  }
+
+  // Check if the word can be formed with the given moves
+  let currentWord = '';
+  for (let i = 0; i < moves.length; i++) {
+    const { row, col } = moves[i];
+    if (row < 0 || row >= 4 || col < 0 || col >= 4) {
+      return false; // Out of bounds
+    }
+    currentWord += board[row][col];
+  }
+
+  if (currentWord.toLowerCase() !== word.toLowerCase()) {
+   throw new WordMismatchError();
+  }
+
+  // if a letter position is repeated, return false
+  const letterPositions: Set<string> = new Set();
+  for (const move of moves) {
+    const position = `${move.row},${move.col}`;
+    if (letterPositions.has(position)) {
+      throw new RepeatedLetterError();
+    }
+    letterPositions.add(position);
+  }
+
+
+  // ensure each move is adjacent to the previous move
+  for (let i = 1; i < moves.length; i++) {
+    const prevMove = moves[i - 1];
+    const currentMove = moves[i];
+    const rowDiff = Math.abs(prevMove.row - currentMove.row);
+    const colDiff = Math.abs(prevMove.col - currentMove.col);
+    
+    // Check if the current move is adjacent to the previous move
+    if (rowDiff > 1 || colDiff > 1 || (rowDiff === 0 && colDiff === 0)) {
+      throw new NotAdjacentError();
+    }
+  }
+
+  // If all checks passed, the word is valid
+  return true;
+}
 
 export const calculateWordScore = (word: string): number => {
   switch (word.length) {

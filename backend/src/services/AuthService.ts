@@ -4,8 +4,8 @@ import { Strategy as GitHubStrategy } from 'passport-github2';
 // import { PrismaClient } from '@prisma/client';
 import { Application } from 'express';
 import { BACKEND_ORIGIN, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET } from '../tools/Constants';
-import { User } from '../db/entities/User';
-import { upsertUser, getUserById } from './UserService';
+import { AuthenticatedUser } from '../db/entities/AuthenticatedUser';
+import { upsertUser, getUserById } from '../db/repositories/AuthenticatedUserRepository';
 
 // const prisma = new PrismaClient();
 
@@ -60,7 +60,7 @@ export const initializeAuthService = (app: Application) => {
       console.log("accessToken:", accessToken);
       console.log("refreshToken:", refreshToken);
       const delimitedName = profile.displayName.split[' '];
-      const saveableUser: Required<Omit<User, 'id'>> = {
+      const saveableUser: Required<Omit<AuthenticatedUser, 'id'>> = {
         firstName: delimitedName[0],
         lastName: delimitedName[delimitedName.length - 1],
         email: profile.emails[0].value,

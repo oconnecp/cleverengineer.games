@@ -1,7 +1,7 @@
 import express from 'express';
 import passport from 'passport';
 import { FRONTEND_ORIGIN } from '../tools/Constants';
-import { User } from '../db/entities/User';
+import { AuthenticatedUser } from '../db/entities/AuthenticatedUser';
 
 const AuthRouter = express.Router()
 
@@ -26,7 +26,7 @@ AuthRouter.get('/github/callback',
 
 AuthRouter.get('/user', (req: express.Request, res: express.Response) => {
   if (req.isAuthenticated && req.isAuthenticated()) {
-    const thisUser = req.user as User; // Cast to any to avoid TypeScript issues
+    const thisUser = req.user as AuthenticatedUser; // Cast to any to avoid TypeScript issues
     console.log('Authenticated user:', thisUser);
 
     res.json({

@@ -1,4 +1,4 @@
-import { getAllWordDictionary, getPopularWordDictionary } from "../DictionaryService/DictionaryService";
+import { getAllWordDictionary, getPopularWordDictionary } from "../Dictionary/DictionaryService";
 import { Trie } from "./Trie";
 import { CacheService } from "../CacheService";
 

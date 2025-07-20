@@ -1,61 +1,44 @@
-import { AppDataSource } from "../../db/data-source";
-import { generateBoard, isValidWord, calculateTotalScore, calculateWordScore, findAllPopularWords } from './BoggleService';
-import { BoggleGame } from '../../db/entities/BoggleGame';
+import { BoggleGame } from "../../db/entities/BoggleGame";
+import { createBoggleGame, getBoggleGameById, getMostRecentBoggleGameByUserId, updateBoggleGame } from "../../db/repositories/BoggleGameRepository";
+import { GameNotFoundError, WordAlreadyFoundError } from "./BoggleError";
+import { generateBoard, findAllPopularWords, calculateTotalScore, isValidMove, calculateWordScore } from "./BoggleGameEngine";
 
-const boggleGameRepository = AppDataSource.getRepository(BoggleGame);
+export const createGame = async (userId: string | null): Promise<BoggleGame> => {
+  const shuffledBoard = generateBoard();
 
-//Generate and save a new Boggle game board
-const createGame = async (userId: string): Promise<BoggleGame> => {
-  const board = generateBoard();
-  const newGame = {
-    userId,
-    board,
-    wordsFound: [],
-    totalUserScore: 0,
-    totalPopularScore: calculateTotalScore(await findAllPopularWords(board)),
-  } as Required<Omit<BoggleGame, 'id' | 'createdAt' | 'updatedAt'>>;
+  const totalPopularScore = await calculateTotalScore(await findAllPopularWords(shuffledBoard));
 
-  const savedGame = await boggleGameRepository.save(newGame);
+  const savedGame = await createBoggleGame(userId, shuffledBoard, totalPopularScore);
   return savedGame;
 }
 
-const getGameById = async (id: string): Promise<BoggleGame | null> => {
-  const game = await boggleGameRepository.findOneBy({ id });
-  if (!game) {
-    return null;
-  }
-  return game;
+export const getGameById = async (id: string): Promise<BoggleGame | null> => {
+  return await getBoggleGameById(id);
 }
 
-const getRecentGameByUserId = async (userId: string): Promise<BoggleGame | null> => {
-  const games = await boggleGameRepository.find({
-    where: { userId },
-    order: { createdAt: 'DESC' },
-    take: 1,
-  });
-  return games.length > 0 ? games[0] : null;
+export const getRecentGameByUserId = async (userId: string): Promise<BoggleGame | null> => {
+  return await getMostRecentBoggleGameByUserId(userId);
 }
 
-const makeMove = async (gameId: string, word: string, column: number, row: number): Promise<BoggleGame | null> => {
+export const submitWord = async (gameId: string, word: string, moves: { row: number, col: number }[]): Promise<BoggleGame | null> => {
   const game = await getGameById(gameId);
   if (!game) {
-    return null;
+    throw new GameNotFoundError();
   }
 
-  if (word.length < 3) {
-    throw new Error('Word is too short');
-  }
   const prettyWord = `${word.charAt(0).toUpperCase()}${word.slice(1).toLowerCase()}`;
 
-  if (await isValidWord(word)) {
-    if (!game.wordsFound.includes(prettyWord)) {
-      game.wordsFound.push(prettyWord);
-      game.totalUserScore += calculateWordScore(prettyWord);
-      await boggleGameRepository.save(game);
-    }
-  } else {
-    throw new Error('Invalid word');
+  if (game.wordsFound.includes(prettyWord)) {
+    throw new WordAlreadyFoundError();
   }
+
+  // this will throw an error if the word is invalid or the moves are not valid
+  isValidMove(word, moves, game.board);
+
+  game.wordsFound.push(prettyWord);
+  game.totalUserScore += calculateWordScore(prettyWord);
+  await updateBoggleGame(game);
+
 
   return game;
 }

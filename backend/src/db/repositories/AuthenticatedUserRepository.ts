@@ -1,9 +1,9 @@
-import { AppDataSource } from "../db/data-source";
-import { User } from "../db/entities/User";
-import { DB_ENCRYPTION_KEY } from "../tools/Constants";
-import { encrypt, decrypt } from "./EncryptionService"
+import { AppDataSource } from "../data-source";
+import { AuthenticatedUser } from "../entities/AuthenticatedUser";
+import { DB_ENCRYPTION_KEY } from "../../tools/Constants";
+import { encrypt, decrypt } from "../../services/EncryptionService"
 
-const userRepository = AppDataSource.getRepository(User);
+const userRepository = AppDataSource.getRepository(AuthenticatedUser);
 
 console.log('DB_ENCRYPTION_KEY:', DB_ENCRYPTION_KEY);
 if (DB_ENCRYPTION_KEY.length !== 32) {
@@ -12,7 +12,7 @@ if (DB_ENCRYPTION_KEY.length !== 32) {
   console.log('DB_ENCRYPTION_KEY is valid length:', DB_ENCRYPTION_KEY.length);
 }
 
-export const getUserByEmail = async (email: string): Promise<User | null> => {
+export const getUserByEmail = async (email: string): Promise<AuthenticatedUser | null> => {
   const user = await userRepository.findOneBy({ email });
   if (!user) {
     return null;
@@ -24,7 +24,7 @@ export const getUserByEmail = async (email: string): Promise<User | null> => {
   return user;
 };
 
-export const getUserById = async (id: string): Promise<User | null> => {
+export const getUserById = async (id: string): Promise<AuthenticatedUser | null> => {
   const user = await userRepository.findOneBy({ id });
   if (!user) {
     return null;
@@ -35,7 +35,7 @@ export const getUserById = async (id: string): Promise<User | null> => {
 };
 
 
-export const upsertUser = async (user: User | Required<Omit<User, 'id'>>): Promise<User> => {
+export const upsertUser = async (user: AuthenticatedUser | Required<Omit<AuthenticatedUser, 'id'>>): Promise<AuthenticatedUser> => {
   const existingUser = await getUserByEmail(user.email);
 
   if (existingUser) {
