@@ -8,10 +8,10 @@ export class BoggleGame {
   @Column({nullable: true})
   userId!: string;
 
-  @Column()
+  @Column({ type: 'json' })
   board!: string[][];
 
-  @Column("simple-array")
+  @Column({ type: 'json' })
   wordsFound!: string[];
 
   @Column()
@@ -25,4 +25,7 @@ export class BoggleGame {
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   updatedAt!: Date;
+
+  @Column()
+  ipAddress!: string;
 }

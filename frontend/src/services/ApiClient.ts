@@ -9,7 +9,7 @@ export const apiGet = async <T>(endpoint: string, cacheable: boolean = false) =>
     if (cacheable) {
         if (!cacheService.checkEntry(endpoint)) {
             cacheService.initializeEntry<AxiosResponse<T>>(endpoint);
-        }else {
+        } else {
             return cacheService.get<AxiosResponse<T>>(endpoint)
         }
     }
@@ -23,9 +23,9 @@ export const apiGet = async <T>(endpoint: string, cacheable: boolean = false) =>
     });
 }
 
-export const apiPost = async (endpoint: string, data: object) => {
+export const apiPost = async <T>(endpoint: string, data: object) => {
     const fullUrl = new URL(endpoint, BaseUrl).href;
-    return axios.post(fullUrl, data, { withCredentials: true });
+    return axios.post<T>(fullUrl, data, { withCredentials: true });
 }
 
 export const getFullUrl = (endpoint: string) => {

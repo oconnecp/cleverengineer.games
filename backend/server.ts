@@ -6,6 +6,7 @@ import { initializeAuthService } from './src/services/AuthService';
 import AuthRouter from './src/routes/AuthRoutes';
 import { ADD_CORS, PORT, FRONTEND_ORIGIN, SESSION_SECRET } from './src/tools/Constants';
 import DictionaryRouter from './src/routes/DictionaryRoutes';
+import BogglerRouter from './src/routes/BoggleRoutes';
 
 const app = express();
 const baseUrl = '/api';
@@ -55,18 +56,25 @@ initializeAuthService(app);
 //   cookie: { secure: true } // set to true if using HTTPS
 // }));
 
-app.use(`${baseUrl}/auth`, AuthRouter);
+app.get(`${baseUrl}/healthcheck`, async (req: Request, res: Response) => {
+  console.log('Health check endpoint hit'); 
+  // Check the TypeORM connection
+  try {
+    await AppDataSource.query('SELECT 1');
+    console.log('Database connection is healthy');
+  } catch (error) {
+    console.error('Database connection error:', error); 
+    return res.status(500).json({ error: 'Database connection error' });
+  }
 
-// app.get(`${baseUrl}/users`, async (req: Request, res: Response) => {
-//   const users = await prisma.user.findMany();
-//   res.json(users);
-// });
+  res.send('All good!');
+});
+
+app.use(`${baseUrl}/auth`, AuthRouter);
 
 app.use(`${baseUrl}/dictionary`, DictionaryRouter);
 
-app.get(`${baseUrl}/helloworld`, async (req: Request, res: Response) => {
-  res.send('Hello World');
-});
+app.use(`${baseUrl}/boggle`, BogglerRouter);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

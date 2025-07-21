@@ -1,59 +1,61 @@
 import React, { useEffect } from 'react';
 import { BoggleBoard } from './BoggleBoard';
-import { generateBoard, isValidWord } from './BoggleService';
+import { newGame, makeMove, GameResponseType } from './BoggleService';
 import { BoggleScore } from './BoggleScore';
 import { BoggleWordList } from './BoggleWordList';
 import { ToastTypeEnum, triggerToast } from '../Toast/ToastService';
 import { AddCircleSVG } from '../../assets/AddCircleSVG'
 
 export default function BoggleGame() {
-
   const [words, setWords] = React.useState<string[]>([]);
   const [board, setBoard] = React.useState<string[][]>([]);
+  const [gameId, setGameId] = React.useState<string | null>(null);
+  const [totalPopularScore, setTotalPopularScore] = React.useState<number>(0);
+  const [totalUserScore, setTotalUserScore] = React.useState<number>(0);
 
   useEffect(() => {
-    setBoard(generateBoard());
+    handleNewGame();
   }, []);
 
-  const handleWordSubmit = async (word: string) => {
-    const prettyWord = `${word.charAt(0).toUpperCase()}${word.slice(1).toLowerCase()}`;
-
-    if (prettyWord.length < 3) {
+  const handleWordSubmit = async (word: string, moves: { row: number, col: number }[]) => {
+    if (word.length < 3) {
       triggerToast({
-        message: `${prettyWord} is too short`,
-        type: ToastTypeEnum.OVERWRITE,
+        message: "Word must be at least 3 letters long",
+        type: ToastTypeEnum.ERROR,
         duration: 2000
-      })
+      });
       return;
     }
 
-    const thisWordValid = await isValidWord(prettyWord);
-    if (!thisWordValid) {
+    makeMove(gameId!, word, moves).then((updatedGame: GameResponseType) => {
+      setWords(updatedGame.wordsFound);
+      setTotalUserScore(updatedGame.totalUserScore);
+    }).catch((error) => {
+      console.error("Error submitting word:", error);
       triggerToast({
-        message: `${prettyWord} not found in dictionary`,
-        type: ToastTypeEnum.OVERWRITE,
+        message: error.message,
+        type: ToastTypeEnum.ERROR,
         duration: 2000
-      })
-      return;
-    }
-
-    if (words.indexOf(prettyWord) > -1) {
-      triggerToast({
-        message: `${prettyWord} already found`,
-        type: ToastTypeEnum.OVERWRITE,
-        duration: 2000
-      })
-      return;
-    }
-
-    setWords([...words, prettyWord]);
-
+      });
+    });
   }
 
   const handleNewGame = () => {
-    // later we can do this on the backend
-    setBoard(generateBoard());
-    setWords([]);
+    console.log("Starting new game");
+    newGame().then((newGame) => {
+      setBoard(newGame.board);
+      setWords([]);
+      setGameId(newGame.id);
+      setTotalPopularScore(newGame.totalPopularScore);
+      setTotalUserScore(newGame.totalUserScore);
+    }).catch((error) => {
+      console.error("Error starting new game:", error);
+      triggerToast({
+        message: error.message,
+        type: ToastTypeEnum.ERROR,
+        duration: 2000
+      });
+    });
   }
 
   const boggleGameStyle: React.CSSProperties = {
@@ -99,13 +101,13 @@ export default function BoggleGame() {
           <span>New Game</span>
         </button>
         <BoggleScore style={boggleControlChildStyle}
-          board={board}
-          words={words}
+          totalPopularScore={totalPopularScore}
+          totalUserScore={totalUserScore}
         />
       </div>
       <BoggleBoard
         board={board}
-        onWordSubmit={(word) => handleWordSubmit(word)}
+        onWordSubmit={(word, moves) => handleWordSubmit(word, moves)}
       />
       <BoggleWordList words={words} />
     </div>

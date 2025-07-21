@@ -1,22 +1,31 @@
 import express, { Request, Response } from 'express';
 import { AuthenticatedUser } from '../db/entities/AuthenticatedUser';
-import { createGame, getGameById, submitWord } from '../services/Boggle/BoggleGameService';
-import { GameNotFoundError } from '../services/Boggle/BoggleError';
+import { convertBoggleGameToBoggleGameResponse, createGame, getGameById, submitWord } from '../services/Boggle/BoggleGameService';
+import { GameNotFoundError} from '../services/Boggle/BoggleError';
+import { convertErrorToErrorResponse } from '../tools/ApiTools';
 const BogglerRouter = express.Router();
 
 BogglerRouter.get(`/newgame`, async (req: Request, res: Response) => {
   let userId: string | null = null;
+  let ipAddress = req.headers['x-forwarded-for'] || req.socket.remoteAddress || 'unknown';
+  if (Array.isArray(ipAddress)) {
+    ipAddress = ipAddress[0];
+  }
+
   if(req.isAuthenticated()) {
     const user = req.user as AuthenticatedUser; // Cast to AuthenticatedUser
     userId = user.id || null;
   }
 
   try {
-    const newGame = await createGame(userId);
-    res.status(201).json(newGame);
+    const newGame = await createGame(userId, ipAddress);
+    //remove sensitive information before sending to client
+    const { id, board, totalPopularScore, wordsFound, totalUserScore } = newGame;
+    const gameResponse = convertBoggleGameToBoggleGameResponse(newGame);
+    res.status(201).json(gameResponse);
   } catch (error) {
     console.error('Error creating new game:', error);
-    res.status(500).json(error);
+    res.status(500).json(convertErrorToErrorResponse(error as Error));
   }
 });
 
@@ -25,16 +34,16 @@ BogglerRouter.get(`/game/:id`, async (req: Request, res: Response) => {
   try {
     const game = await getGameById(gameId);
     if (!game) {
-      return res.status(404).json({ error: 'Game not found' });
+      return res.status(404).json(convertErrorToErrorResponse(new GameNotFoundError()));
     }
     res.json(game);
   } catch (error) {
     console.error('Error fetching game:', error);
-    res.status(500).json(error);
+    res.status(500).json(convertErrorToErrorResponse(error as Error));
   }
 });
 
-BogglerRouter.post(`/submit-word`, async (req: Request, res: Response) => {
+BogglerRouter.post(`/game/:id/make-move`, async (req: Request, res: Response) => {
   const { gameId, word, moves} = req.body;
   if (!gameId || !word || !Array.isArray(moves)) {
     return res.status(400).json({ error: 'Game ID, word, and moves are required' });
@@ -42,10 +51,11 @@ BogglerRouter.post(`/submit-word`, async (req: Request, res: Response) => {
 
   try {
     const updatedGame = await submitWord(gameId, word, moves);
-    res.json(updatedGame);
+    const gameResponse = convertBoggleGameToBoggleGameResponse(updatedGame);
+    res.json(gameResponse);
   } catch (error) {
     console.error('Error submitting word:', error);
-    res.status(500).json(error);
+    res.status(500).json(convertErrorToErrorResponse(error as Error));
   }
 });
 
@@ -63,7 +73,7 @@ BogglerRouter.get(`/recent-game`, async (req: Request, res: Response) => {
     res.json(recentGame);
   } catch (error) {
     console.error('Error fetching recent game:', error);
-    res.status(500).json(error);
+    res.status(500).json(convertErrorToErrorResponse(error as Error));
   }
 });
 

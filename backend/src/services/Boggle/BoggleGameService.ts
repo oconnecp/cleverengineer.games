@@ -1,14 +1,14 @@
 import { BoggleGame } from "../../db/entities/BoggleGame";
 import { createBoggleGame, getBoggleGameById, getMostRecentBoggleGameByUserId, updateBoggleGame } from "../../db/repositories/BoggleGameRepository";
 import { GameNotFoundError, WordAlreadyFoundError } from "./BoggleError";
-import { generateBoard, findAllPopularWords, calculateTotalScore, isValidMove, calculateWordScore } from "./BoggleGameEngine";
+import { generateBoard, findAllPopularWords, calculateTotalScore, isValidMove, calculateWordScore, getPrettyWord } from "./BoggleGameEngine";
 
-export const createGame = async (userId: string | null): Promise<BoggleGame> => {
+export const createGame = async (userId: string | null, ipAddress: string): Promise<BoggleGame> => {
   const shuffledBoard = generateBoard();
 
   const totalPopularScore = await calculateTotalScore(await findAllPopularWords(shuffledBoard));
 
-  const savedGame = await createBoggleGame(userId, shuffledBoard, totalPopularScore);
+  const savedGame = await createBoggleGame(userId, shuffledBoard, totalPopularScore, ipAddress);
   return savedGame;
 }
 
@@ -20,25 +20,44 @@ export const getRecentGameByUserId = async (userId: string): Promise<BoggleGame 
   return await getMostRecentBoggleGameByUserId(userId);
 }
 
-export const submitWord = async (gameId: string, word: string, moves: { row: number, col: number }[]): Promise<BoggleGame | null> => {
+export const submitWord = async (gameId: string, word: string, moves: { row: number, col: number }[]): Promise<BoggleGame> => {
   const game = await getGameById(gameId);
   if (!game) {
     throw new GameNotFoundError();
   }
 
-  const prettyWord = `${word.charAt(0).toUpperCase()}${word.slice(1).toLowerCase()}`;
+  const prettyWord = getPrettyWord(word);
 
   if (game.wordsFound.includes(prettyWord)) {
-    throw new WordAlreadyFoundError();
+    throw new WordAlreadyFoundError(prettyWord);
   }
 
-  // this will throw an error if the word is invalid or the moves are not valid
-  isValidMove(word, moves, game.board);
+  if (await isValidMove(word, moves, game.board)) {
 
-  game.wordsFound.push(prettyWord);
-  game.totalUserScore += calculateWordScore(prettyWord);
-  await updateBoggleGame(game);
-
+    game.wordsFound.push(prettyWord);
+    game.totalUserScore += calculateWordScore(prettyWord);
+    await updateBoggleGame(game);
+  }
 
   return game;
+}
+
+//todo: We should work on syncing these with the backend types
+export type BoggleGameResponse = {
+  id: string,
+  board: string[][],
+  totalPopularScore: number,
+  wordsFound: string[],
+  totalUserScore: number,
+}
+
+//hilarious name must stay
+export const convertBoggleGameToBoggleGameResponse = (game: BoggleGame): BoggleGameResponse => { 
+  return {
+    id: game.id,
+    board: game.board,
+    totalPopularScore: game.totalPopularScore,
+    wordsFound: game.wordsFound,
+    totalUserScore: game.totalUserScore,
+  };
 }

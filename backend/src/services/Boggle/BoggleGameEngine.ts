@@ -1,11 +1,6 @@
 import { Trie } from '../Trie/Trie';
 import { getPopularWordDictionaryTree, getAllWordDictionaryTree } from '../Trie/TrieDictionaryService';
-import { MovesLengthMismatchError, NotAdjacentError, RepeatedLetterError, WordMismatchError, WordTooShortError } from './BoggleError';
-
-// getAllWordDictionaryTree can be called right now to start loading the trie
-// the endpoint utilizes the cache service so calling it here will not cause
-// multiple calls to the backend
-getAllWordDictionaryTree()
+import { InvalidWordError, MovesLengthMismatchError, NotAdjacentError, RepeatedLetterError, WordMismatchError, WordTooShortError } from './BoggleError';
 
 // Pulled from the game rules this is the definition of the dice
 const dice: string[][] = [
@@ -56,16 +51,20 @@ export const isValidWord = async (word: string): Promise<boolean> => {
   return trieAllWordDictionary.search(searchableWord);
 };
 
+export const getPrettyWord = (word: string): string => {
+  return `${word.charAt(0).toUpperCase()}${word.slice(1).toLowerCase()}`;
+}
 
-export const isValidMove = (word:string, moves: { row: number, col: number }[], board:string[][]): boolean => {
+export const isValidMove = async (word:string, moves: { row: number, col: number }[], board:string[][]): Promise<boolean> => {
   // Check if the word is too short
   if (word.length < 3) {
-    throw new WordTooShortError();
+    throw new WordTooShortError(getPrettyWord(word));
   }
 
   // Check if the word is valid
-  if (!isValidWord(word)) {
-    throw new WordTooShortError();
+  const wordValidation = await isValidWord(word);
+  if (!wordValidation) {
+    throw new InvalidWordError(getPrettyWord(word));
   }
 
   // Check if the moves are valid

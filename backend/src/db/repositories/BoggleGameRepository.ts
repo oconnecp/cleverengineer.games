@@ -4,13 +4,14 @@ import { BoggleGame } from '../entities/BoggleGame';
 const boggleGameRepository = AppDataSource.getRepository(BoggleGame);
 
 //Generate and save a new Boggle game board
-export const createBoggleGame = async (userId: string | null, board:string[][], totalPopularScore:number): Promise<BoggleGame> => {
+export const createBoggleGame = async (userId: string | null, board:string[][], totalPopularScore:number, ipAddress:string): Promise<BoggleGame> => {
   const newGame = {
     userId,
     board,
     wordsFound: [],
     totalUserScore: 0,
     totalPopularScore,
+    ipAddress,
   } as Required<Omit<BoggleGame, 'id' | 'createdAt' | 'updatedAt'>>;
 
   const savedGame = await boggleGameRepository.save(newGame);

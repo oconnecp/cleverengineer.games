@@ -14,8 +14,8 @@ export class BoggleMove {
   @Column()
   score!: number;
 
-  @Column()
-  locations!: [number, number][];
+  @Column({ type: 'json' })
+  moves!: { row: number, col: number }[];
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt!: Date;

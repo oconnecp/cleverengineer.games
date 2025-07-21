@@ -14,7 +14,7 @@ const getAllWordDictionaryTree = async (): Promise<Trie> => {
     return cachedTrie;
   }
 
-  const AllWordDictionary = await getAllWordDictionary();
+  const AllWordDictionary = getAllWordDictionary();
   const AllWordDictionaryTree = new Trie();
 
   AllWordDictionary.forEach(word => AllWordDictionaryTree!.insert(word));
@@ -31,7 +31,7 @@ const getPopularWordDictionaryTree = async (): Promise<Trie> => {
     return cachedTrie;
   }
 
-  const PopularWordDictionary = await getPopularWordDictionary();
+  const PopularWordDictionary = getPopularWordDictionary();
   const PopularWordDictionaryTree = new Trie();
   PopularWordDictionary.forEach(word => {
     if (word.length >= 3) {

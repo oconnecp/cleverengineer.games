@@ -4,7 +4,7 @@ import { BoggleCurrentWord } from './BoggleCurrentWord';
 
 interface BoggleBoardProps {
   board: string[][];
-  onWordSubmit: (word: string) => void;
+  onWordSubmit: (word: string, moves: { row: number, col: number }[]) => void;
 }
 
 export const BoggleBoard: React.FC<BoggleBoardProps> = ({ board, onWordSubmit }) => {
@@ -94,7 +94,7 @@ export const BoggleBoard: React.FC<BoggleBoardProps> = ({ board, onWordSubmit })
       word += board[row][col];
     }
 
-    onWordSubmit(word);
+    onWordSubmit(word, selectedLetters);
     setSelectedLetters([]);
   };
 
