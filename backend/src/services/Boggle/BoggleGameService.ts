@@ -1,5 +1,5 @@
 import { BoggleGame } from "../../db/entities/BoggleGame";
-import { createBoggleGame, getBoggleGameById, getMostRecentBoggleGameByUserId, updateBoggleGame } from "../../db/repositories/BoggleGameRepository";
+import { createBoggleGame, getBoggleGameById, getMostRecentBoggleGameByUserId, updateBoggleGame, getAllBoggleGamesByUserId } from "../../db/repositories/BoggleGameRepository";
 import { makeMove } from "../../db/repositories/BoggleMoveRepository";
 import { GameNotFoundError, WordAlreadyFoundError } from "./BoggleError";
 import { generateBoard, findAllPopularWords, calculateTotalScore, isValidMove, calculateWordScore, getPrettyWord } from "./BoggleGameEngine";
@@ -46,6 +46,23 @@ export const submitWord = async (gameId: string, word: string, moves: { row: num
 
   return game;
 }
+
+//todo: We should work on syncing these with the backend types
+export type BoggleGameStatsResponse = {
+  totalGames: number;
+  totalScore: number;
+}
+
+export const getUserBoggleStats = async (userId: string): Promise<{ totalGames: number, totalScore: number }> => {
+  const games = await getAllBoggleGamesByUserId(userId);
+  const totalGames = games.length;
+  const totalScore = games.reduce((acc, game) => acc + game.totalUserScore, 0);
+  return {
+    totalGames,
+    totalScore
+  };
+}
+
 
 //todo: We should work on syncing these with the backend types
 export type BoggleGameResponse = {

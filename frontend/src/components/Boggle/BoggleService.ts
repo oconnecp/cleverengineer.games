@@ -48,3 +48,22 @@ export const makeMove = async (gameId: string, word: string, moves: { row: numbe
   }
 };
 
+//todo: We should work on syncing these with the backend types
+export type BoggleGameStatsResponse = {
+  totalGames: number;
+  totalScore: number;
+}
+
+export const getUserBoggleStats = async (userId: string): Promise<BoggleGameStatsResponse> => {
+  try {
+    const response = await apiGet<BoggleGameStatsResponse>(`boggle/stats/user`);
+    return response.data;
+  } catch (error: any) {
+    console.error("Error fetching Boggle stats:", error);
+    let errorMessage = "An error occurred while fetching Boggle stats.";
+    if(error && error.response && error.response.data) {
+      errorMessage = error.response.data.message || errorMessage;
+    }
+    throw new Error(errorMessage);
+  }
+}

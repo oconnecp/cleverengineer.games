@@ -40,3 +40,9 @@ export const updateBoggleGame = async (game: BoggleGame): Promise<BoggleGame> =>
   return await boggleGameRepository.save(game);
 }
 
+export const getAllBoggleGamesByUserId = async (userId:string): Promise<BoggleGame[]> => {
+  return await boggleGameRepository.find({
+    where: { userId },
+    order: { createdAt: 'DESC' },
+  });
+};

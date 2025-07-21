@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express';
 import { AuthenticatedUser } from '../db/entities/AuthenticatedUser';
-import { convertBoggleGameToBoggleGameResponse, createGame, getGameById, submitWord } from '../services/Boggle/BoggleGameService';
-import { GameNotFoundError} from '../services/Boggle/BoggleError';
+import { convertBoggleGameToBoggleGameResponse, getUserBoggleStats, createGame, getGameById, submitWord } from '../services/Boggle/BoggleGameService';
+import { GameNotFoundError } from '../services/Boggle/BoggleError';
 import { convertErrorToErrorResponse } from '../tools/ApiTools';
 const BogglerRouter = express.Router();
 
@@ -12,7 +12,7 @@ BogglerRouter.get(`/newgame`, async (req: Request, res: Response) => {
     ipAddress = ipAddress[0];
   }
 
-  if(req.isAuthenticated()) {
+  if (req.isAuthenticated()) {
     const user = req.user as AuthenticatedUser; // Cast to AuthenticatedUser
     userId = user.id || null;
   }
@@ -44,7 +44,7 @@ BogglerRouter.get(`/game/:id`, async (req: Request, res: Response) => {
 });
 
 BogglerRouter.post(`/game/:id/make-move`, async (req: Request, res: Response) => {
-  const { gameId, word, moves} = req.body;
+  const { gameId, word, moves } = req.body;
   if (!gameId || !word || !Array.isArray(moves)) {
     return res.status(400).json({ error: 'Game ID, word, and moves are required' });
   }
@@ -77,5 +77,18 @@ BogglerRouter.get(`/recent-game`, async (req: Request, res: Response) => {
   }
 });
 
+BogglerRouter.get(`/stats/user`, async (req: Request, res: Response) => {
+  if (!req.isAuthenticated()) {
+    return res.status(401).json({ error: 'User not authenticated' });
+  }
+  const user = req.user as AuthenticatedUser; // Cast to AuthenticatedUser
+  try {
+    const stats = await getUserBoggleStats(user.id);
+    res.json(stats);
+  } catch (error) {
+    console.error('Error fetching user Boggle stats:', error);
+    res.status(500).json(convertErrorToErrorResponse(error as Error));
+  }
+});
 
 export default BogglerRouter;
