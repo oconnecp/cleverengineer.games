@@ -142,7 +142,7 @@ export const BoggleBoard: React.FC<BoggleBoardProps> = ({ board, onWordSubmit })
             <React.Fragment key={`row-${rowIndex}`} >
               <tr className={styles.boggleRow}>
                 {row.map((letter, columnIndex) => (
-                  <React.Fragment key={`cell-${columnIndex}-${rowIndex}`} >
+                  <React.Fragment key={`cell-${rowIndex}-${columnIndex}`} >
                     <td
                       id={`cell-${rowIndex}-${columnIndex}`}
                       className={`${styles.boggleCell} ${selectedLetters.some(sel => sel.row === rowIndex && sel.col === columnIndex) ? styles.selected : ''} ${selectedLetters[selectedLetters.length - 1]?.row === rowIndex && selectedLetters[selectedLetters.length - 1]?.col === columnIndex ? styles.lastSelected : ''}`}

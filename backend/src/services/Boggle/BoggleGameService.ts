@@ -1,5 +1,6 @@
 import { BoggleGame } from "../../db/entities/BoggleGame";
 import { createBoggleGame, getBoggleGameById, getMostRecentBoggleGameByUserId, updateBoggleGame } from "../../db/repositories/BoggleGameRepository";
+import { makeMove } from "../../db/repositories/BoggleMoveRepository";
 import { GameNotFoundError, WordAlreadyFoundError } from "./BoggleError";
 import { generateBoard, findAllPopularWords, calculateTotalScore, isValidMove, calculateWordScore, getPrettyWord } from "./BoggleGameEngine";
 
@@ -31,12 +32,16 @@ export const submitWord = async (gameId: string, word: string, moves: { row: num
   if (game.wordsFound.includes(prettyWord)) {
     throw new WordAlreadyFoundError(prettyWord);
   }
+  let thisWordScore = calculateWordScore(prettyWord);
 
   if (await isValidMove(word, moves, game.board)) {
-
     game.wordsFound.push(prettyWord);
-    game.totalUserScore += calculateWordScore(prettyWord);
+    game.totalUserScore += thisWordScore
     await updateBoggleGame(game);
+
+    // store BoggleMove in the database
+    // we don't need to await as this is a fire-and-forget operation
+    makeMove(gameId, prettyWord, thisWordScore, moves);
   }
 
   return game;
@@ -52,7 +57,7 @@ export type BoggleGameResponse = {
 }
 
 //hilarious name must stay
-export const convertBoggleGameToBoggleGameResponse = (game: BoggleGame): BoggleGameResponse => { 
+export const convertBoggleGameToBoggleGameResponse = (game: BoggleGame): BoggleGameResponse => {
   return {
     id: game.id,
     board: game.board,
