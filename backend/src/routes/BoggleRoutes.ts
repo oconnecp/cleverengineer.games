@@ -7,7 +7,8 @@ const BogglerRouter = express.Router();
 
 BogglerRouter.get(`/newgame`, async (req: Request, res: Response) => {
   let userId: string | null = null;
-  let ipAddress = req.headers['x-forwarded-for'] || req.socket.remoteAddress || 'unknown';
+  // let ipAddress = req.headers['x-forwarded-for'] || req.socket.remoteAddress || 'unknown';
+  let ipAddress = req.ip || 'unknown'; // Use req.ip for the IP address
   if (Array.isArray(ipAddress)) {
     ipAddress = ipAddress[0];
   }

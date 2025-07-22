@@ -11,6 +11,8 @@ import BogglerRouter from './src/routes/BoggleRoutes';
 const app = express();
 const baseUrl = '/api';
 
+app.set('trust proxy', true); // Trust first proxy for secure cookies if behind a reverse proxy
+
 // Configure CORS to allow requests from the frontend
 // If we are in production with our current setup, we won't need to use CORS
 // because the frontend and backend will be served from the same domain.
