@@ -13,7 +13,8 @@ const boggleWordListStyle: React.CSSProperties = {
 }
 
 const h2Style: React.CSSProperties = {
-  textAlign: "center"
+  textAlign: "center",
+  paddingBottom: "5px",
 }
 
 const scrollingStyle: React.CSSProperties = {
@@ -37,7 +38,6 @@ export const BoggleWordList: React.FC<BoggleWordListProps> = ({ words }) => {
       <h2 style={h2Style}>{words.length > 0 ? 'Words Found:' : 'Find Words by swiping'}</h2>
       <div style={scrollingStyle}>
         <div style={spacerStyle}/>
-        {/* todo: refactor so that we get rid of the ul styling */}
         <div style={listStyle}>
           {words.map((word, index) => (
             index % 2 === 0 && (<div key={index}>{word}</div>)
