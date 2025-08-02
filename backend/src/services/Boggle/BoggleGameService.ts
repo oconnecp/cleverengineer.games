@@ -1,7 +1,7 @@
 import { BoggleGame } from "../../db/entities/BoggleGame";
 import { createBoggleGame, getBoggleGameById, getMostRecentBoggleGameByUserId, updateBoggleGame, getAllBoggleGamesByUserId } from "../../db/repositories/BoggleGameRepository";
 import { makeMove } from "../../db/repositories/BoggleMoveRepository";
-import { GameNotFoundError, WordAlreadyFoundError } from "./BoggleError";
+import { GameNotFoundError, WordAlreadyFoundError, GameExpiredError} from "./BoggleError";
 import { generateBoard, findAllPopularWords, calculateTotalScore, isValidMove, calculateWordScore, getPrettyWord } from "./BoggleGameEngine";
 
 export const createGame = async (userId: string | null, ipAddress: string): Promise<BoggleGame> => {
@@ -25,6 +25,12 @@ export const submitWord = async (gameId: string, word: string, moves: { row: num
   const game = await getGameById(gameId);
   if (!game) {
     throw new GameNotFoundError();
+  }
+
+  // Check if the game has expired
+  // 3 minutes with 1 second buffer for network delay each direction
+  if (game.createdAt.getTime() + 182000 < Date.now()) {
+    throw new GameExpiredError(word);
   }
 
   const prettyWord = getPrettyWord(word);

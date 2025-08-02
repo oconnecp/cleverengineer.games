@@ -1,6 +1,8 @@
 import express, { Request, Response } from 'express';
 import { AuthenticatedUser } from '../db/entities/AuthenticatedUser';
 import { convertBoggleGameToBoggleGameResponse, getUserBoggleStats, createGame, getGameById, submitWord, BoggleGameResponse } from '../services/Boggle/BoggleGameService';
+import { getPrettyWord } from '../services/Boggle/BoggleGameEngine';
+import { makeMove } from '../db/repositories/BoggleMoveRepository';
 import { BoggleError, GameNotFoundError } from '../services/Boggle/BoggleError';
 import { convertErrorToErrorResponse } from '../tools/ApiTools';
 const BogglerRouter = express.Router();
@@ -57,6 +59,13 @@ BogglerRouter.post(`/game/:id/make-move`, async (req: Request, res: Response<Bog
     res.json(gameResponse);
   } catch (error) {
     console.error('Error submitting word:', error);
+    // Lets track invalid moves
+    // We don't need to await this as it's a fire-and-forget operation
+    // If there is an error submitting the word, we still want to log the move
+    makeMove(gameId, word, 0, moves).catch((err) => {
+      console.error('Error logging invalid move:', err);
+    });
+    // Convert the error to a BoggleError response
     res.status(500).json(convertErrorToErrorResponse(error as Error));
   }
 });

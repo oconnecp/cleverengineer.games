@@ -40,6 +40,20 @@ export class InvalidWordError extends BoggleError {
   }
 }
 
+export class GameExpiredError extends BoggleError {
+  constructor(word?: string) {
+    let message: string;
+    // If a word is provided, include it in the error message
+    if (word) {
+      message = `"${word}" cannot be played because the game has expired.`;
+    } else {
+      message = "The game has expired.";
+    }
+    super(message);
+    this.name = "GameExpiredError";
+  }
+}
+
 export class MovesLengthMismatchError extends BoggleError {
   constructor() {
     super("Number of moves does not match word length.");

@@ -20,14 +20,16 @@ export default function BoggleGame() {
   }, []);
 
   const handleWordSubmit = async (word: string, moves: { row: number, col: number }[]) => {
-    if (word.length < 3) {
-      triggerToast({
-        message: "Word must be at least 3 letters long",
-        type: ToastTypeEnum.ERROR,
-        duration: 2000
-      });
-      return;
-    }
+    // Let's comment this out for now, as we are checking words on the backend
+    // and we can log invalid moves there
+    // if (word.length < 3) {
+    //   triggerToast({
+    //     message: "Word must be at least 3 letters long",
+    //     type: ToastTypeEnum.ERROR,
+    //     duration: 2000
+    //   });
+    //   return;
+    // }
 
     makeMove(gameId!, word, moves).then((updatedGame: GameResponseType) => {
       setWords(updatedGame.wordsFound);
