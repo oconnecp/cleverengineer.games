@@ -5,6 +5,7 @@ import { BoggleScore } from './BoggleScore';
 import { BoggleWordList } from './BoggleWordList';
 import { ToastTypeEnum, triggerToast } from '../Toast/ToastService';
 import { AddCircleSVG } from '../../assets/AddCircleSVG'
+import BoggleTimer from './BoggleTimer';
 
 export default function BoggleGame() {
   const [words, setWords] = React.useState<string[]>([]);
@@ -12,6 +13,7 @@ export default function BoggleGame() {
   const [gameId, setGameId] = React.useState<string | null>(null);
   const [totalPopularScore, setTotalPopularScore] = React.useState<number>(0);
   const [totalUserScore, setTotalUserScore] = React.useState<number>(0);
+  const [endTimeStamp, setEndTimeStamp] = React.useState<number | null>(null);
 
   useEffect(() => {
     handleNewGame();
@@ -41,13 +43,13 @@ export default function BoggleGame() {
   }
 
   const handleNewGame = () => {
-    console.log("Starting new game");
     newGame().then((newGame) => {
       setBoard(newGame.board);
       setWords([]);
       setGameId(newGame.id);
       setTotalPopularScore(newGame.totalPopularScore);
       setTotalUserScore(newGame.totalUserScore);
+      setEndTimeStamp(newGame.createdAt + 181000); // 3 minutes with 1 seconds buffer for network delay
     }).catch((error) => {
       console.error("Error starting new game:", error);
       triggerToast({
@@ -67,20 +69,19 @@ export default function BoggleGame() {
 
   const boggleHeader: React.CSSProperties = {
     display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center"
+    flexDirection: "row",
+    alignItems: "baseline",
+    justifyContent: "space-between",
   }
 
   const boggleControlsStyle: React.CSSProperties = {
     display: "flex",
   }
 
-  const boggleControlChildStyle: React.CSSProperties = {
-    margin: "auto",
+  const boggleTimerStyle: React.CSSProperties = {
+    marginRight: "auto",
   }
   const svgButtonStyle: React.CSSProperties = {
-    ...boggleControlChildStyle,
     textAlign: "center",
     padding: "4px",
     display: "flex",
@@ -94,13 +95,14 @@ export default function BoggleGame() {
     <div className="boggle-game" style={boggleGameStyle}>
       <div className='boggle-header' style={boggleHeader}>
         <h1>Boggle</h1>
-      </div>
-      <div style={boggleControlsStyle}>
         <button style={svgButtonStyle} onClick={handleNewGame}>
           <AddCircleSVG style={circleSVGStyle}></AddCircleSVG>
           <span>New Game</span>
         </button>
-        <BoggleScore style={boggleControlChildStyle}
+      </div>
+      <div style={boggleControlsStyle}>
+        <BoggleTimer style={boggleTimerStyle} endTimestamp={endTimeStamp}></BoggleTimer>
+        <BoggleScore
           totalPopularScore={totalPopularScore}
           totalUserScore={totalUserScore}
         />

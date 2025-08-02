@@ -71,6 +71,7 @@ export type BoggleGameResponse = {
   totalPopularScore: number,
   wordsFound: string[],
   totalUserScore: number,
+  createdAt: number,
 }
 
 //hilarious name must stay
@@ -81,5 +82,6 @@ export const convertBoggleGameToBoggleGameResponse = (game: BoggleGame): BoggleG
     totalPopularScore: game.totalPopularScore,
     wordsFound: game.wordsFound,
     totalUserScore: game.totalUserScore,
+    createdAt: game.createdAt.getTime(),
   };
 }
