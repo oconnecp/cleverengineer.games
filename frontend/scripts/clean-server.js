@@ -12,7 +12,7 @@ const cleanServer = () => {
     fs.readdirSync(src).forEach(file => {
       const filePath = path.join(src, file);
       if (fs.lstatSync(filePath).isDirectory()) {
-        fs.rmdirSync(filePath, { recursive: true });
+        fs.rmSync(filePath, { recursive: true });
       } else {
         fs.unlinkSync(filePath);
       } 
