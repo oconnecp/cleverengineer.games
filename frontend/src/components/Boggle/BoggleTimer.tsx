@@ -43,7 +43,6 @@ export const BoggleTimer: React.FC<BoggleTimerProps> = ({ endTimestamp, onComple
   useEffect(() => {
     // Always update remaining immediately when endTimestamp changes
     setRemaining(getRemaining());
-
     clearTimerInterval();
 
     if (!endTimestamp) {
