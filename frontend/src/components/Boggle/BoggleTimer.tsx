@@ -19,7 +19,6 @@ export const BoggleTimer: React.FC<BoggleTimerProps> = ({ endTimestamp, onComple
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
       intervalRef.current = null;
-    } else {
     }
   }
 
