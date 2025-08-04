@@ -60,7 +60,7 @@ export const BoggleTimer: React.FC<BoggleTimerProps> = ({ endTimestamp, onComple
       clearTimerInterval();
     };
     // Only depend on endTimestamp
-  }, [endTimestamp]);
+  }, [endTimestamp, initialSeconds]);
 
   // If the timer is done, clear the interval
   useEffect(() => {
@@ -68,7 +68,7 @@ export const BoggleTimer: React.FC<BoggleTimerProps> = ({ endTimestamp, onComple
       onComplete?.();
       clearTimerInterval();
     }
-  }, [remaining.done]);
+  }, [remaining.done, onComplete]);
 
   return (
     <h2 style={style}>
