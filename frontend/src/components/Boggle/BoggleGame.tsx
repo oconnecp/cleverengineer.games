@@ -7,6 +7,10 @@ import { ToastTypeEnum, triggerToast } from '../Toast/ToastService';
 import { AddCircleSVG } from '../../assets/AddCircleSVG'
 import BoggleTimer from './BoggleTimer';
 
+const standardGameDuration = 180000; // 3 minutes in milliseconds
+const bufferTime = 1000; // 1 second buffer for network delay
+const totalGameDuration = standardGameDuration + bufferTime; // 3 minutes with 1 second buffer for render delay
+
 export default function BoggleGame() {
   const [words, setWords] = React.useState<string[]>([]);
   const [board, setBoard] = React.useState<string[][]>([]);
@@ -40,7 +44,7 @@ export default function BoggleGame() {
       setGameId(newGame.id);
       setTotalPopularScore(newGame.totalPopularScore);
       setTotalUserScore(newGame.totalUserScore);
-      setEndTimeStamp(newGame.createdAt + 181000); // 3 minutes with 1 seconds buffer for network delay
+      setEndTimeStamp(newGame.createdAt + totalGameDuration); // 3 minutes with 1 seconds buffer for network delay
     }).catch((error) => {
       console.error("Error starting new game:", error);
       triggerToast({
