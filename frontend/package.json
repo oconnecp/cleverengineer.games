@@ -8,7 +8,7 @@
     "build": "npx tsc -b && vite build && npm run build-server",
     "lint": "eslint .",
     "preview": "vite preview",
-    "clean-server": "rm -rf server-dist",
+    "clean-server": "node scripts/clean-server.js",
     "start": "node server-dist/server.js",
     "build-server": "npm run clean-server && npx tsc --project tsconfig.server.json"
   },

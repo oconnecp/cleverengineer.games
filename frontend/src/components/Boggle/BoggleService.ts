@@ -9,6 +9,7 @@ export type GameResponseType = {
   totalPopularScore: number,
   wordsFound: string[],
   totalUserScore: number,
+  createdAt: number, // timestamp in milliseconds
 }
 
 export const newGame = async (): Promise<GameResponseType> => {

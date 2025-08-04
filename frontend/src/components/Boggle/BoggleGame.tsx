@@ -5,6 +5,11 @@ import { BoggleScore } from './BoggleScore';
 import { BoggleWordList } from './BoggleWordList';
 import { ToastTypeEnum, triggerToast } from '../Toast/ToastService';
 import { AddCircleSVG } from '../../assets/AddCircleSVG'
+import BoggleTimer from './BoggleTimer';
+
+const standardGameDuration = 180000; // 3 minutes in milliseconds
+const bufferTime = 1000; // 1 second buffer for network delay
+const totalGameDuration = standardGameDuration + bufferTime; // 3 minutes with 1 second buffer for render delay
 
 export default function BoggleGame() {
   const [words, setWords] = React.useState<string[]>([]);
@@ -12,21 +17,13 @@ export default function BoggleGame() {
   const [gameId, setGameId] = React.useState<string | null>(null);
   const [totalPopularScore, setTotalPopularScore] = React.useState<number>(0);
   const [totalUserScore, setTotalUserScore] = React.useState<number>(0);
+  const [endTimeStamp, setEndTimeStamp] = React.useState<number | null>(null);
 
   useEffect(() => {
     handleNewGame();
   }, []);
 
   const handleWordSubmit = async (word: string, moves: { row: number, col: number }[]) => {
-    if (word.length < 3) {
-      triggerToast({
-        message: "Word must be at least 3 letters long",
-        type: ToastTypeEnum.ERROR,
-        duration: 2000
-      });
-      return;
-    }
-
     makeMove(gameId!, word, moves).then((updatedGame: GameResponseType) => {
       setWords(updatedGame.wordsFound);
       setTotalUserScore(updatedGame.totalUserScore);
@@ -41,13 +38,13 @@ export default function BoggleGame() {
   }
 
   const handleNewGame = () => {
-    console.log("Starting new game");
     newGame().then((newGame) => {
       setBoard(newGame.board);
       setWords([]);
       setGameId(newGame.id);
       setTotalPopularScore(newGame.totalPopularScore);
       setTotalUserScore(newGame.totalUserScore);
+      setEndTimeStamp(newGame.createdAt + totalGameDuration); // 3 minutes with 1 seconds buffer for network delay
     }).catch((error) => {
       console.error("Error starting new game:", error);
       triggerToast({
@@ -67,20 +64,19 @@ export default function BoggleGame() {
 
   const boggleHeader: React.CSSProperties = {
     display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center"
+    flexDirection: "row",
+    alignItems: "baseline",
+    justifyContent: "space-between",
   }
 
   const boggleControlsStyle: React.CSSProperties = {
     display: "flex",
   }
 
-  const boggleControlChildStyle: React.CSSProperties = {
-    margin: "auto",
+  const boggleTimerStyle: React.CSSProperties = {
+    marginRight: "auto",
   }
   const svgButtonStyle: React.CSSProperties = {
-    ...boggleControlChildStyle,
     textAlign: "center",
     padding: "4px",
     display: "flex",
@@ -94,13 +90,14 @@ export default function BoggleGame() {
     <div className="boggle-game" style={boggleGameStyle}>
       <div className='boggle-header' style={boggleHeader}>
         <h1>Boggle</h1>
-      </div>
-      <div style={boggleControlsStyle}>
         <button style={svgButtonStyle} onClick={handleNewGame}>
           <AddCircleSVG style={circleSVGStyle}></AddCircleSVG>
           <span>New Game</span>
         </button>
-        <BoggleScore style={boggleControlChildStyle}
+      </div>
+      <div style={boggleControlsStyle}>
+        <BoggleTimer style={boggleTimerStyle} endTimestamp={endTimeStamp}></BoggleTimer>
+        <BoggleScore
           totalPopularScore={totalPopularScore}
           totalUserScore={totalUserScore}
         />

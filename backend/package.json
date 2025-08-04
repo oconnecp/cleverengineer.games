@@ -6,7 +6,6 @@
   "scripts": {
     "start": "npm run start-backend",
     "build": "tsc -b && node scripts/rename-server.js",
-    "initialize-database": "npx prisma generate",
     "start-backend": "node dist/server.cjs",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

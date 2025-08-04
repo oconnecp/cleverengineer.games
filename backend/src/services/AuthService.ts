@@ -15,7 +15,6 @@ export const initializeAuthService = (app: Application) => {
 
   // Configure Google OAuth strategy
   const googleCallbackURL = `${BACKEND_ORIGIN}/api/auth/google/callback`;
-  console.log("Google Callback URL:", googleCallbackURL);
 
   passport.use(new GoogleStrategy({
     clientID: GOOGLE_CLIENT_ID || '',
@@ -48,7 +47,6 @@ export const initializeAuthService = (app: Application) => {
 
   // Configure GitHub OAuth strategy
   const githubCallbackURL = `${BACKEND_ORIGIN}/api/auth/github/callback`;
-  console.log("GitHub Callback URL:", githubCallbackURL);
 
   passport.use(new GitHubStrategy({
     clientID: GITHUB_CLIENT_ID || '',
