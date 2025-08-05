@@ -11,7 +11,9 @@ import BogglerRouter from './src/routes/BoggleRoutes';
 const app = express();
 const baseUrl = '/api';
 
-app.set('trust proxy', true); // Trust first proxy for secure cookies if behind a reverse proxy
+// Trust the proxy because we are using an nginx reverse proxy in production
+// This is important for session handling and secure cookies
+app.set('trust proxy', true); 
 
 // Configure CORS to allow requests from the frontend
 // If we are in production with our current setup, we won't need to use CORS
@@ -24,19 +26,10 @@ if (ADD_CORS) {
   }));
 }
 
-AppDataSource.initialize()
-  .then(() => {
-    console.log("Data Source has been initialized!");
-    // Start your server or application logic here
-  })
-  .catch((err) => {
-    console.error("Error during Data Source initialization:", err);
-  });
-
 // logger middleware
-app.use((req: Request ,res:Response,next) =>{
+app.use((req: Request, res: Response, next) => {
   const time = new Date(Date.now()).toString();
-  console.log(req.method,req.hostname, req.path, time);
+  console.log(req.method, req.hostname, req.path, time);
   next();
 });
 
@@ -44,8 +37,10 @@ app.use(express.json());
 app.use(session({ secret: SESSION_SECRET, resave: false, saveUninitialized: true }));
 
 initializeAuthService(app);
-//const pgSession = require('connect-pg-simple')(session);
 
+// Uncomment the following lines if you want to use PostgreSQL sessions
+// This will store session data in a PostgreSQL database allowing for persistence across server restarts.
+// const pgSession = require('connect-pg-simple')(session);
 // Use the existing TypeORM connection pool
 // app.use(session({
 //   store: new pgSession({
@@ -58,8 +53,10 @@ initializeAuthService(app);
 //   cookie: { secure: true } // set to true if using HTTPS
 // }));
 
-app.get(`${baseUrl}/healthcheck`, async (_req: Request, res: Response): Promise<void> => {
+// Add health check endpoint
+app.get(`${baseUrl}/healthcheck`, async (_req: Request, res: Response) => {
   console.log('Health check endpoint hit');
+  // Check the TypeORM connection
   try {
     await AppDataSource.query('SELECT 1');
     console.log('Database connection is healthy');
@@ -70,12 +67,27 @@ app.get(`${baseUrl}/healthcheck`, async (_req: Request, res: Response): Promise<
   }
 });
 
+// Add routes
 app.use(`${baseUrl}/auth`, AuthRouter);
-
 app.use(`${baseUrl}/dictionary`, DictionaryRouter);
-
 app.use(`${baseUrl}/boggle`, BogglerRouter);
 
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+// Initialize the database connection, run migrations, and start the server
+AppDataSource.initialize()
+  .catch((err) => {
+    console.error("Error during Data Source initialization:", err);
+    process.exit(1); // Exit the process if the database connection fails
+  })
+  .then(() => {
+    console.log("Data Source has been initialized!");
+    return AppDataSource.runMigrations();
+  }).catch((err) => {
+    console.error("Error during Migrations:", err);
+  })
+  .then(() => {
+    console.log("Migrations have been run successfully!");
+    console.log("Starting server...");
+    app.listen(PORT, () => {
+      console.log(`Server is running on port ${PORT}`);
+    });
+  })

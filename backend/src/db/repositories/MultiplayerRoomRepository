@@ -1,0 +1,29 @@
+import { AppDataSource } from "../data-source";
+import { MultiplayerRoom } from '../entities/MultiplayerRoom';
+import { Between } from "typeorm";
+
+const GameOfTheDayRespository = AppDataSource.getRepository(MultiplayerRoom);
+
+export const createMultiplayerRoom = async (board:string[][], totalPopularScore:number, gameIds:string[] = []): Promise<MultiplayerRoom> => {
+  const multiplayerRoom = new MultiplayerRoom();
+  multiplayerRoom.board = board;
+  multiplayerRoom.totalPopularScore = totalPopularScore;
+  multiplayerRoom.gameIds = [...gameIds]; // Initialize with an empty array or the provided game IDs
+
+  return await GameOfTheDayRespository.save(multiplayerRoom);
+}
+
+export const getMultiplayerRoomById = async (id: string): Promise<MultiplayerRoom | null> => {
+  const room = await GameOfTheDayRespository.findOneBy({ id });
+  if (!room) {
+    return null;
+  }
+  return room;
+}
+
+export const findRoomByGameId = async (gameId: string): Promise<MultiplayerRoom[]> => {
+  return await AppDataSource.getRepository(MultiplayerRoom)
+    .createQueryBuilder("room")
+    .where(":gameId = ANY(room.gameIds)", { gameId })
+    .getMany();
+};
