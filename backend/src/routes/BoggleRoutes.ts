@@ -1,7 +1,6 @@
 import express, { Request, Response } from 'express';
 import { AuthenticatedUser } from '../db/entities/AuthenticatedUser';
 import { convertBoggleGameToBoggleGameResponse, getUserBoggleStats, createGame, getGameById, submitWord, BoggleGameResponse } from '../services/Boggle/BoggleGameService';
-import { getPrettyWord } from '../services/Boggle/BoggleGameEngine';
 import { makeMove } from '../db/repositories/BoggleMoveRepository';
 import { BoggleError, GameNotFoundError } from '../services/Boggle/BoggleError';
 import { convertErrorToErrorResponse } from '../tools/ApiTools';
@@ -35,7 +34,8 @@ BogglerRouter.get(`/game/:id`, async (req: Request, res: Response<BoggleGameResp
   try {
     const game = await getGameById(gameId);
     if (!game) {
-      return res.status(404).json(convertErrorToErrorResponse(new GameNotFoundError()));
+      res.status(404).json(convertErrorToErrorResponse(new GameNotFoundError()));
+      return;
     }
     const gameResponse = convertBoggleGameToBoggleGameResponse(game);
     res.json(gameResponse);
@@ -49,7 +49,8 @@ BogglerRouter.post(`/game/:id/make-move`, async (req: Request, res: Response<Bog
   const { gameId, word, moves } = req.body;
   if (!gameId || !word || !Array.isArray(moves)) {
     const boggleError = new BoggleError('Game ID, word, and moves are required');
-    return res.status(400).json(convertErrorToErrorResponse(boggleError));
+    res.status(400).json(convertErrorToErrorResponse(boggleError));
+    return;
   }
 
   try {
@@ -72,14 +73,16 @@ BogglerRouter.post(`/game/:id/make-move`, async (req: Request, res: Response<Bog
 BogglerRouter.get(`/recent-game`, async (req: Request, res: Response<BoggleGameResponse | BoggleError>) => {
   if (!req.isAuthenticated()) {
     const boggleError = new BoggleError('User not authenticated');
-    return res.status(401).json(convertErrorToErrorResponse(boggleError));
+    res.status(401).json(convertErrorToErrorResponse(boggleError));
+    return;
   }
 
   const user = req.user as AuthenticatedUser; // Cast to AuthenticatedUser
   try {
     const recentGame = await getGameById(user.id);
     if (!recentGame) {
-      return res.status(404).json(new GameNotFoundError());
+      res.status(404).json(new GameNotFoundError());
+      return;
     }
     const gameResponse = convertBoggleGameToBoggleGameResponse(recentGame);
     res.json(gameResponse);
@@ -91,7 +94,8 @@ BogglerRouter.get(`/recent-game`, async (req: Request, res: Response<BoggleGameR
 
 BogglerRouter.get(`/stats/user`, async (req: Request, res: Response) => {
   if (!req.isAuthenticated()) {
-    return res.status(401).json({ error: 'User not authenticated' });
+    res.status(401).json({ error: 'User not authenticated' });
+    return;
   }
   const user = req.user as AuthenticatedUser; // Cast to AuthenticatedUser
   try {

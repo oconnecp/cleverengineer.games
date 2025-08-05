@@ -58,18 +58,16 @@ initializeAuthService(app);
 //   cookie: { secure: true } // set to true if using HTTPS
 // }));
 
-app.get(`${baseUrl}/healthcheck`, async (req: Request, res: Response) => {
-  console.log('Health check endpoint hit'); 
-  // Check the TypeORM connection
+app.get(`${baseUrl}/healthcheck`, async (_req: Request, res: Response): Promise<void> => {
+  console.log('Health check endpoint hit');
   try {
     await AppDataSource.query('SELECT 1');
     console.log('Database connection is healthy');
+    res.send('All good!');
   } catch (error) {
-    console.error('Database connection error:', error); 
-    return res.status(500).json({ error: 'Database connection error' });
+    console.error('Database connection error:', error);
+    res.status(500).json({ error: 'Database connection error' });
   }
-
-  res.send('All good!');
 });
 
 app.use(`${baseUrl}/auth`, AuthRouter);
