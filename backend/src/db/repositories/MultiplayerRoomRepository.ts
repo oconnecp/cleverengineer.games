@@ -1,10 +1,9 @@
 import { AppDataSource } from "../data-source";
 import { MultiplayerRoom } from '../entities/MultiplayerRoom';
-import { Between } from "typeorm";
 
 const GameOfTheDayRespository = AppDataSource.getRepository(MultiplayerRoom);
 
-export const createMultiplayerRoom = async (board:string[][], totalPopularScore:number, gameIds:string[] = []): Promise<MultiplayerRoom> => {
+export const insertNewMultiplayerRoom = async (board:string[][], totalPopularScore:number, gameIds:string[] = []): Promise<MultiplayerRoom> => {
   const multiplayerRoom = new MultiplayerRoom();
   multiplayerRoom.board = board;
   multiplayerRoom.totalPopularScore = totalPopularScore;
@@ -13,8 +12,8 @@ export const createMultiplayerRoom = async (board:string[][], totalPopularScore:
   return await GameOfTheDayRespository.save(multiplayerRoom);
 }
 
-export const getMultiplayerRoomById = async (id: string): Promise<MultiplayerRoom | null> => {
-  const room = await GameOfTheDayRespository.findOneBy({ id });
+export const getMultiplayerRoomById = async (roomId: string): Promise<MultiplayerRoom | null> => {
+  const room = await GameOfTheDayRespository.findOneBy({ id: roomId });
   if (!room) {
     return null;
   }

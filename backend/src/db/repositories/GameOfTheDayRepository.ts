@@ -4,18 +4,12 @@ import { Between } from "typeorm";
 
 const GameOfTheDayRespository = AppDataSource.getRepository(GameOfTheDay);
 
-export const createGameOfTheDay = async (multiplayerRoomId: string, day: Date,): Promise<GameOfTheDay> => {
+export const insertNewGameOfTheDay = async (multiplayerRoomId: string, day: Date,): Promise<GameOfTheDay> => {
   const gameOfTheDay = new GameOfTheDay();
   gameOfTheDay.multiplayerRoomId = multiplayerRoomId;
   gameOfTheDay.day = day;
 
-  //check if there is already a game of the day for this date
-  const existingGame = await getGameOfTheDayByDate(day);
-  if (existingGame) {
-    throw new Error(`Game of the day already exists for date: ${day.toISOString()}`);
-  }
-
-  return await GameOfTheDayRespository.save(gameOfTheDay);
+  return  GameOfTheDayRespository.save(gameOfTheDay);
 }
 
 export const getGameOfTheDayByDate = async (day: Date): Promise<GameOfTheDay | null> => {
@@ -31,5 +25,6 @@ export const getGameOfTheDayByDate = async (day: Date): Promise<GameOfTheDay | n
     },
   });
 
-  return gameOfTheDay || null;
+   
+  return gameOfTheDay;
 }
