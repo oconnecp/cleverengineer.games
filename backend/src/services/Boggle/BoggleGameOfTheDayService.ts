@@ -1,7 +1,8 @@
 import { insertNewGameOfTheDay, getGameOfTheDayByDate } from "../../db/repositories/GameOfTheDayRepository";
-import { createMultiplayerBoggleGame,  } from "./MultiplayerBoggleGameService"
+import { createMultiplayerBoggleGame, getMultiplayerRoom } from "./MultiplayerBoggleGameService"
 import { GameOfTheDay } from "../../db/entities/GameOfTheDay";
 import { MultiplayerRoom } from "../../db/entities/MultiplayerRoom";
+import { updateMultiplayerRoom } from "../../db/repositories/MultiplayerRoomRepository";
 
 
 export const getGameOfTheDay = async (day: Date): Promise<{ gameOfTheDay: GameOfTheDay, multiplayerRoom: MultiplayerRoom }> => {
@@ -10,8 +11,12 @@ export const getGameOfTheDay = async (day: Date): Promise<{ gameOfTheDay: GameOf
   let multiplayerRoom: MultiplayerRoom | null = null;
 
   if (gameOfTheDay) {
-    multiplayerRoom = await 
-   } else {
+    multiplayerRoom = await getMultiplayerRoom(gameOfTheDay.multiplayerRoomId);
+    if (!multiplayerRoom) {
+      throw new Error(`Multiplayer room not found for ID: ${gameOfTheDay.multiplayerRoomId}`);
+    }
+    return { gameOfTheDay: gameOfTheDay, multiplayerRoom: multiplayerRoom };
+  } else {
     // If no game of the day exists, create a new one
     multiplayerRoom = await createMultiplayerBoggleGame();
     gameOfTheDay = await insertNewGameOfTheDay(multiplayerRoom.id, day);
@@ -20,15 +25,13 @@ export const getGameOfTheDay = async (day: Date): Promise<{ gameOfTheDay: GameOf
   }
 }
 
-export const addGameIdToMultiplayerRoom = async (roomId: string, gameId: string): Promise<MultiplayerRoom | null> => {
-  const multiplayerRoom = await getMultiplayerRoomById(roomId);
-  if (!multiplayerRoom) {
-    return null;
-  }
+export const addGameIdToGameOfDay = async (roomId: string, gameId: string): Promise<{ gameOfTheDay: GameOfTheDay, multiplayerRoom: MultiplayerRoom }> => {
+  // Get the game of the day by room ID
+  const { gameOfTheDay, multiplayerRoom } = await getGameOfTheDay(new Date());
 
-  // Add the game ID to the room's gameIds array
   multiplayerRoom.gameIds.push(gameId);
-  
-  // Save the updated room
-  return await AppDataSource.getRepository(MultiplayerRoom).save(multiplayerRoom);
+  updateMultiplayerRoom(multiplayerRoom);
+  multiplayerRoom.updatedAt = new Date(); // Update the timestamp for the frontend
+
+  return { gameOfTheDay, multiplayerRoom };
 }

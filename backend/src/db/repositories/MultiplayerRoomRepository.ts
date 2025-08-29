@@ -26,3 +26,7 @@ export const findRoomByGameId = async (gameId: string): Promise<MultiplayerRoom[
     .where(":gameId = ANY(room.gameIds)", { gameId })
     .getMany();
 };
+
+export const updateMultiplayerRoom = async (room: MultiplayerRoom): Promise<MultiplayerRoom> => {
+  return await GameOfTheDayRespository.save(room);
+}

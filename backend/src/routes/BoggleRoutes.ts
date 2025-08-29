@@ -1,6 +1,7 @@
 import express, { Request, Response } from 'express';
 import { AuthenticatedUser } from '../db/entities/AuthenticatedUser';
 import { convertBoggleGameToBoggleGameResponse, getUserBoggleStats, createGame, getGameById, submitWord, BoggleGameResponse } from '../services/Boggle/BoggleGameService';
+import { getGameOfTheDay, addGameIdToGameOfDay } from '../services/Boggle/BoggleGameOfTheDayService';
 import { makeMove } from '../db/repositories/BoggleMoveRepository';
 import { BoggleError, GameNotFoundError } from '../services/Boggle/BoggleError';
 import { convertErrorToErrorResponse } from '../tools/ApiTools';
@@ -103,6 +104,17 @@ BogglerRouter.get(`/stats/user`, async (req: Request, res: Response) => {
     res.json(stats);
   } catch (error) {
     console.error('Error fetching user Boggle stats:', error);
+    res.status(500).json(convertErrorToErrorResponse(error as Error));
+  }
+});
+
+BogglerRouter.get('/game-of-the-day', async (req: Request, res: Response) => {
+  try {
+    const today = new Date();
+    const { gameOfTheDay, multiplayerRoom } = await getGameOfTheDay(today);
+    res.json({ gameOfTheDay, multiplayerRoom });
+  } catch (error) {
+    console.error('Error fetching game of the day:', error);
     res.status(500).json(convertErrorToErrorResponse(error as Error));
   }
 });
