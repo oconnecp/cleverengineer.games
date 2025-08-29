@@ -7,6 +7,9 @@
     "start": "npm run start-backend",
     "build": "tsc -b && node scripts/rename-server.js",
     "start-backend": "node dist/server.cjs",
+    "build-image": "npm run build && docker build -t oconnecp/cleverengineer.games-backend:latest ./",
+    "push-image": "docker push oconnecp/cleverengineer.games-backend:latest",
+    "build-and-push": "npm run build-image && npm run push-image",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
