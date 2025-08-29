@@ -5,9 +5,13 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - ./nginx/conf:/etc/nginx/conf.d:ro
+      - ./nginx/conf:/host/conf:ro
+      - ./nginx-entrypoint.sh:/nginx-entrypoint.sh:ro
       - ./certbot/www/:/var/www/certbot:ro
       - ./certbot/conf/:/etc/letsencrypt:ro
+    entrypoint: /bin/sh /nginx-entrypoint.sh
+    secrets:
+      - watchtower_webhook_secret
     restart: always
 
   certbot:
@@ -56,7 +60,17 @@ services:
     depends_on:
       - backend
     restart: always
+    
+  watchtower:
+    image: containrrr/watchtower
+    restart: always
+    environment:
+      - WATCHTOWER_CLEANUP=true
+      - WATCHTOWER_HTTP_API_TOKEN=supersecrettoken
 
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: --interval 600 --http-api-update --http-api-periodic-polls --http-api-metrics --include-restarting
   adminer:
     image: adminer
     depends_on:
@@ -77,3 +91,5 @@ secrets:
     file: ./secrets/github_client_secret.txt
   db_encryption_key:
     file: ./secrets/db_encryption_key.txt
+  watchtower_webhook_secret:
+    file: ./secrets/watchtower_webhook_secret.txt

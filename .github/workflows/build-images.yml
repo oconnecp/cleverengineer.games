@@ -39,3 +39,7 @@ jobs:
       
       - name: Push frontend image
         run: docker push oconnecp/cleverengineer.games-frontend:latest
+
+      - name: Trigger Watchtower webhook
+        run: |
+          curl -X POST https://cleverengineer.games/deploy/v1/update -H "X-Deploy-Secret: ${{ secrets.WATCHTOWER_WEBHOOK_SECRET }}"

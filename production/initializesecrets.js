@@ -8,6 +8,7 @@ const secretFiles = [
   'github_client_id.txt',
   'github_client_secret.txt',
   'db_encryption_key.txt',
+  'watchtower_webhook_secret.txt'
 ];
 
 // Create the secrets directory if it doesn't exist

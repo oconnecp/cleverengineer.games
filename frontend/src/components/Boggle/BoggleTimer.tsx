@@ -31,9 +31,12 @@ export const BoggleTimer: React.FC<BoggleTimerProps> = ({ endTimestamp, onComple
     }
     const now = Date.now();
     const diff = Math.max(0, Math.floor((endTimestamp - now) / 1000));
+    //ensure we don't go above initialSeconds when we add a network and redering buffer
+    const maxDiff = Math.min(diff, initialSeconds);
+    
     const done = diff === 0;
-    const minutes = Math.floor(diff / 60);
-    const seconds = diff % 60;
+    const minutes = Math.floor(maxDiff / 60);
+    const seconds = maxDiff % 60;
 
     return { minutes, seconds, done };
   };
