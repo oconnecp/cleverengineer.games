@@ -29,7 +29,7 @@ services:
     restart: always
 
   backend:
-    build: ../backend
+    image: oconnecp/cleverengineer.games-backend:latest
     environment:
       DATABASE_URL: postgresql://user:password@db:5432/mydb
       HOSTNAME: cleverengineer.games
@@ -49,7 +49,7 @@ services:
     restart: always
 
   frontend:
-    build: ../frontend
+    image: oconnecp/cleverengineer.games-frontend:latest
     environment:
       HOSTNAME: cleverengineer.games
       MODE: production

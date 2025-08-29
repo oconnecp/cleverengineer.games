@@ -10,7 +10,10 @@
     "preview": "vite preview",
     "clean-server": "node scripts/clean-server.js",
     "start": "node server-dist/server.js",
-    "build-server": "npm run clean-server && npx tsc --project tsconfig.server.json"
+    "build-server": "npm run clean-server && npx tsc --project tsconfig.server.json",
+    "build-image": "npm install && npm run build && docker build -t oconnecp/cleverengineer.games-frontend:latest ./",
+    "push-image": "docker push oconnecp/cleverengineer.games-frontend:latest",
+    "build-and-push": "npm run build-image && npm run push-image"
   },
   "dependencies": {
     "@react-oauth/google": "^0.12.1",
